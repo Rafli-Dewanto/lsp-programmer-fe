@@ -3,6 +3,7 @@ export interface Cake {
   title: string;
   description: string;
   rating: number;
+  price: number;
   image_url: string;
   created_at: Date;
   updated_at: Date;

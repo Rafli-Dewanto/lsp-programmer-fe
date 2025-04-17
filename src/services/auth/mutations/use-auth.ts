@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login, register } from "../api";
-import { CUSTOMER } from "@/constants";
+import { QK_CUSTOMER } from "@/constants";
 
 export function useRegister() {
   const queryClient = useQueryClient();
@@ -8,7 +8,7 @@ export function useRegister() {
   return useMutation({
     mutationFn: register,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CUSTOMER] });
+      queryClient.invalidateQueries({ queryKey: [QK_CUSTOMER] });
     },
   });
 }
@@ -19,7 +19,7 @@ export function useLogin() {
   return useMutation({
     mutationFn: login,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CUSTOMER] });
+      queryClient.invalidateQueries({ queryKey: [QK_CUSTOMER] });
     },
   });
 }

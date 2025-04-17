@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 interface JwtPayload {
   email: string;
   name: string;
+  role: string;
   [key: string]: string; // In case there are additional fields
 }
 
@@ -15,6 +16,7 @@ interface AuthContextType {
   token: string | null;
   email: string | null;
   name: string | null;
+  role: string | null;
   setToken: (token: string | null) => void;
   logout: () => void;
 }
@@ -25,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -35,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const decoded = jwtDecode<JwtPayload>(token);
         setEmail(decoded.email || null);
         setName(decoded.name || null);
+        setRole(decoded.role || null);
       } catch (err) {
         console.error("Invalid token:", err);
         setEmail(null);
@@ -83,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ token, email, name, setToken: handleSetToken, logout }}>
+    <AuthContext.Provider value={{ token, email, name, setToken: handleSetToken, logout, role }}>
       {children}
     </AuthContext.Provider>
   );

@@ -15,10 +15,13 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
+  ABOUT: "/about",
+  SHOP: "/shop",
+  ORDER: "/orders",
 };
 // ====================================================================================================================
 // tanstack query keys
-export const CUSTOMER = "customers";
-export const CAKES = "cakes";
-export const ORDERS = "orders";
+export const QK_CUSTOMER = "customers";
+export const QK_CAKES = "cakes";
+export const QK_ORDERS = "orders";
 // ====================================================================================================================

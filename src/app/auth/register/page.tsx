@@ -46,7 +46,7 @@ export default function RegisterPage() {
           />
           <div className="absolute inset-0 bg-pink-500/20" />
           <div className="absolute bottom-8 left-8 max-w-md rounded-lg bg-white/90 p-6 backdrop-blur-sm">
-            <h2 className="mb-2 text-2xl font-bold text-pink-800">Sweet Delights Bakery</h2>
+            <h2 className="mb-2 text-2xl font-bold text-pink-800">CakeVille Bakery</h2>
             <p className="text-muted-foreground">
               Indulge in our handcrafted cakes and pastries, made with love and the finest ingredients.
             </p>
