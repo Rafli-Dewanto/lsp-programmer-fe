@@ -1,3 +1,4 @@
+import ShopPage from '@/components/shop/cakes'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 
 const ShoppingPage = () => {
   return (
-    <div>ShoppingPage</div>
+    <>
+      <ShopPage />
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosError, AxiosResponse } from 'axios';
-import { getErrorMessage } from './error';
+import { AxiosError, AxiosResponse } from "axios";
+import { getErrorMessage } from "./error";
 
 /**
  * A generic API resolver function that abstracts the fetching and error handling logic for API calls.
@@ -21,7 +21,9 @@ import { getErrorMessage } from './error';
  * - For all other types of errors, the function uses a utility function `getErrorMessage` to extract a meaningful
  *   error message and throws a new Error with this message.
  */
-export const apiResolver = async <ClientResponse = any>(fetcher: () => Promise<AxiosResponse<ClientResponse>>) => {
+export const apiResolver = async <ClientResponse = any>(
+  fetcher: () => Promise<AxiosResponse<ClientResponse>>
+) => {
   try {
     const res = await fetcher();
     return res.data;
@@ -30,18 +32,19 @@ export const apiResolver = async <ClientResponse = any>(fetcher: () => Promise<A
       throw err;
     }
     if (err instanceof Error) {
-      const abortSignalError = ['TimeoutError', 'AbortError', 'TypeError'];
+      const abortSignalError = ["TimeoutError", "AbortError", "TypeError"];
       if (abortSignalError.includes(err.name)) {
-        let errorMessage = '';
+        let errorMessage = "";
         switch (err.message) {
-          case 'TimeoutError':
-            errorMessage = 'Oops! Something went wrong, please try again later.';
+          case "TimeoutError":
+            errorMessage =
+              "Oops! Something went wrong, please try again later.";
             break;
-          case 'AbortError':
-            errorMessage = 'Request aborted by user.';
+          case "AbortError":
+            errorMessage = "Request aborted by user.";
             break;
-          case 'TypeError':
-            errorMessage = 'AbortSignal is not supported!';
+          case "TypeError":
+            errorMessage = "AbortSignal is not supported!";
             break;
           default:
             errorMessage = `Error: type: ${err.name}, message: ${err.message}`;
@@ -53,7 +56,7 @@ export const apiResolver = async <ClientResponse = any>(fetcher: () => Promise<A
         message: err.message,
         status: err.name,
         cause: err.cause,
-        stack: err.stack
+        stack: err.stack,
       };
       throw new Error(JSON.stringify(errorDetails));
     } else {
@@ -69,7 +72,17 @@ export function newAbortSignal(timeoutMs: number) {
   return abortController.signal;
 }
 
-export type Response<T = undefined> = {
+export interface MetaData {
+  current_page: number;
+  total: number;
+  per_page: number;
+  last_page: number;
+  has_next_page: boolean;
+  has_prev_page: boolean;
+}
+
+export type Response<T = undefined, M = undefined> = {
   message: string;
   data?: T;
+  meta?: M;
 };
