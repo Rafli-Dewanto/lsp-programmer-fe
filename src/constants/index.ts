@@ -17,6 +17,7 @@ export const ROUTES = {
   REGISTER: "/auth/register",
   ABOUT: "/about",
   SHOP: "/shop",
+  CART: "/shop/cart",
   ORDER: "/orders",
 };
 // ====================================================================================================================

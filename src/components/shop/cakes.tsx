@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sheet"
 import { useCakes } from "@/services/cakes/queries/use-cakes"
 import { cakeCategory } from "@/services/cakes/types"
+import { useCartStore } from "@/store/cart"
 import { formatCurrency } from "@/utils/string"
 import { Filter, Heart, Search, Star, X } from "lucide-react"
 import Image from "next/image"
@@ -36,6 +37,7 @@ export default function ShopPage() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const addItem = useCartStore((state) => state.addItem);
 
   // Parse search params with defaults
   const page = Number(searchParams.get("page") || "1")
@@ -404,7 +406,12 @@ export default function ShopPage() {
                             <div className="flex items-center justify-between mb-4">
                               <p className="font-bold text-pink-800">{formatCurrency(Number(cake.price.toFixed(2)), "id-ID")}</p>
                             </div>
-                            <Button className="w-full bg-pink-600 hover:bg-pink-700">Add to Cart</Button>
+                            <Button onClick={() => addItem({
+                              id: cake.id,
+                              title: cake.title,
+                              price: Number(cake.price),
+                              quantity: 1,
+                            })} className="w-full bg-pink-600 hover:bg-pink-700">Add to Cart</Button>
                           </CardContent>
                         </Card>
                       ))}

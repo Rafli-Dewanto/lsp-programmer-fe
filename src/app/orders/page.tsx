@@ -1,3 +1,4 @@
+import OrderHistory from '@/components/order/order-history'
 import { Metadata } from 'next'
 import React from 'react'
 
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 
 const OrderPage = () => {
   return (
-    <div>OrderPage</div>
+    <div>
+      <OrderHistory />
+    </div>
   )
 }
 
