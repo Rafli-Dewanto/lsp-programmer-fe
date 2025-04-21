@@ -20,7 +20,16 @@ export function getCake(id: number) {
 }
 
 export function createCake(payload: Cake) {
-  return apiResolver<Response<Cake>>(() => axios.post("/cakes", payload));
+  console.log(payload);
+  return apiResolver<Response<Cake>>(() =>
+    axios.post("/cakes", {
+      title: payload.title,
+      description: payload.description,
+      price: Number(payload.price),
+      category: payload.category,
+      image: payload.image_url,
+    })
+  );
 }
 
 export function updateCake(payload: Cake) {

@@ -33,6 +33,8 @@ import { getErrorMessage } from "@/utils/error";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import Link from "next/link";
+import { formatCurrency } from "@/utils/string";
 
 const ProductList = () => {
   const router = useRouter();
@@ -95,7 +97,7 @@ const ProductList = () => {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/products/edit/${id}`);
+    router.push(`/admin/cakes/${id}`);
   };
 
   const handleAddNew = () => {
@@ -106,7 +108,11 @@ const ProductList = () => {
     <div className="container py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-semibold">Product Management</h1>
-        <Button className="bg-pink-600" onClick={handleAddNew}>Add New Product</Button>
+        <Link href="/admin/cakes/create">
+          <Button className="bg-pink-600 hover:bg-pink-700 active:bg-pink-800" onClick={handleAddNew}>
+            Add New Cake
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
@@ -161,7 +167,7 @@ const ProductList = () => {
               <TableRow key={cake.id}>
                 <TableCell>{cake.title}</TableCell>
                 <TableCell className="capitalize">{cake.category.split("_").join(" ")}</TableCell>
-                <TableCell>${cake.price}</TableCell>
+                <TableCell>{formatCurrency(cake.price, "id-ID")}</TableCell>
                 <TableCell className="flex gap-2">
                   <Button
                     className="bg-yellow-500 hover:bg-yellow-600 text-white"
