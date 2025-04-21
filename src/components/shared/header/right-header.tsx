@@ -1,5 +1,6 @@
 "use client";
 
+import AdminNavigation from '@/components/admin/admin-navigation';
 import Show from '@/components/shared/show';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants';
@@ -22,6 +23,7 @@ const RightHeader = () => {
           {email}
         </Show>
       </Link>
+      <AdminNavigation />
       <Show when={!!email}>
         <Button onClick={logout} size="sm" className="bg-pink-600 hover:bg-pink-700">
           Log out

@@ -14,3 +14,20 @@ export function getCakes(params: CakesQueryParams) {
     })
   );
 }
+
+export function getCake(id: number) {
+  return apiResolver<Response<Cake>>(() => axios.get(`/cakes/${id}`));
+}
+
+export function createCake(payload: Cake) {
+  return apiResolver<Response<Cake>>(() => axios.post("/cakes", payload));
+}
+
+export function updateCake(payload: Cake) {
+  const { id, ...data } = payload;
+  return apiResolver<Response<Cake>>(() => axios.put(`/cakes/${id}`, data));
+}
+
+export function deleteCake(id: number) {
+  return apiResolver<Response<string>>(() => axios.delete(`/cakes/${id}`));
+}
