@@ -1,10 +1,14 @@
 "use client";
 
-import { useCakes } from "@/services/cakes/queries/use-cakes";
-import { cakeCategory } from "@/services/cakes/types";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -21,19 +25,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useDisclosure from "@/hooks/use-disclosure";
+import { useDeleteCake } from "@/services/cakes/mutations/use-delete-cake";
+import { useCakes } from "@/services/cakes/queries/use-cakes";
+import { cakeCategory } from "@/services/cakes/types";
+import { getErrorMessage } from "@/utils/error";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
 
 const ProductList = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { close, isOpen, open } = useDisclosure();
+  const deleteCakeMutation = useDeleteCake();
 
   const page = Number(searchParams.get("page") || "1");
   const title = searchParams.get("title") || "";
   const category = searchParams.get("category") as cakeCategory;
 
   const [searchTitle, setSearchTitle] = useState(title);
-  const [searchCategory, setSearchCategory] = useState(category ?? "other");
+  const [searchCategory, setSearchCategory] = useState(category ?? "all");
 
   const { data, isLoading, error } = useCakes({
     page,
@@ -62,8 +76,21 @@ const ProductList = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      console.log(`Deleting product with ID: ${id}`);
+    setSelectedId(id);
+    open();
+  };
+
+  const confirmDelete = () => {
+    if (selectedId) {
+      deleteCakeMutation.mutate(Number(selectedId), {
+        onSuccess: () => {
+          close();
+          setSelectedId(null);
+        },
+        onError: (error) => {
+          alert(getErrorMessage(error));
+        },
+      });
     }
   };
 
@@ -223,6 +250,25 @@ const ProductList = () => {
           </Pagination>
         )}
       </div>
+
+      <Dialog open={isOpen} onOpenChange={open}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => close()}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete} disabled={deleteCakeMutation.isPending}>
+              {deleteCakeMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
