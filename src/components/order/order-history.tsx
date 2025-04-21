@@ -7,9 +7,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import React from 'react';
 import { formatCurrency } from '@/utils/string';
+import { useAuth } from '@/contexts/auth-context';
 
 const OrderHistory = () => {
   const { data, isLoading, error } = useOrder();
+  const { email } = useAuth();
+
+  if (!email) {
+    return <p className="text-center mt-8">Please log in to view your order history.</p>;
+  }
 
   if (isLoading) {
     return (

@@ -9,7 +9,7 @@ import { useCartStore } from '@/store/cart';
 import Link from 'next/link';
 
 const RightHeader = () => {
-  const { email, logout } = useAuth();
+  const { email, logout, role } = useAuth();
   const { items } = useCartStore();
 
   return (
@@ -23,7 +23,9 @@ const RightHeader = () => {
           {email}
         </Show>
       </Link>
-      <AdminNavigation />
+      <Show when={role === "admin"}>
+        <AdminNavigation />
+      </Show>
       <Show when={!!email}>
         <Button onClick={logout} size="sm" className="bg-pink-600 hover:bg-pink-700">
           Log out

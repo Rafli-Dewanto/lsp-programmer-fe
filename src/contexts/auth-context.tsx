@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (!loading && !token) {
       const currentPath = window.location.pathname;
-      const publicPaths = ['/auth/login', '/auth/register', '/'];
+      const publicPaths = ['/auth/login', '/auth/register', '/', "/shop", "/about"];
       if (!publicPaths.includes(currentPath)) {
         router.push('/auth/login');
       }
@@ -79,15 +79,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     decodeToken(newToken);
   };
 
-  const logout = () => {
+  const onLogout = () => {
     handleSetToken(null);
+    setToken(null);
+    setEmail(null);
+    setName(null);
+    setRole(null);
     router.push('/auth/login');
   };
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ token, email, name, setToken: handleSetToken, logout, role }}>
+    <AuthContext.Provider value={{ token, email, name, setToken: handleSetToken, logout: onLogout, role }}>
       {children}
     </AuthContext.Provider>
   );

@@ -9,7 +9,9 @@ export function register(payload: Register) {
 }
 
 export function login(payload: Login) {
-  return apiResolver<Response<token>>(() =>
-    axios.post("/login", payload)
-  );
+  return apiResolver<Response<token>>(() => axios.post("/login", payload));
+}
+
+export function authorize() {
+  return apiResolver<Response>(() => axios.get("/authorize"));
 }

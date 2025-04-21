@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, register } from "../api";
 import { QK_CUSTOMER } from "@/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authorize, login, register } from "../api";
 
 export function useRegister() {
   const queryClient = useQueryClient();
@@ -18,6 +18,17 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: login,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QK_CUSTOMER] });
+    },
+  });
+}
+
+export function useAuthorize() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: authorize,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QK_CUSTOMER] });
     },
