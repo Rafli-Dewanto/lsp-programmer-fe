@@ -1,8 +1,14 @@
 import CakeCard from '@/components/shared/cake-card'
+import Show from '@/components/shared/show'
 import { Button } from '@/components/ui/button'
+import { useCakes } from '@/services/cakes/queries/use-cakes'
 import { ChevronRight } from 'lucide-react'
 
 const Featured = () => {
+  const { data, isLoading, isError } = useCakes({
+    limit: 4
+  });
+
   return (
     <section className="bg-pink-50 py-16">
       <div className="w-full mx-auto px-4 container">
@@ -14,14 +20,19 @@ const Featured = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { id: 1, title: "Chocolate Truffle", price: 90000, rating: 5 },
-            { id: 2, title: "Strawberry Delight", price: 86000, rating: 4 },
-            { id: 3, title: "Vanilla Bean", price: 79000, rating: 5 },
-            { id: 4, title: "Red Velvet", price: 120000, rating: 5 },
-          ].map((cake, index) => (
-            <CakeCard cake={cake} key={index} />
-          ))}
+          <Show when={isLoading}>
+            <div className="w-full h-96 rounded-lg bg-gray-100 animate-pulse"></div>
+          </Show>
+          <Show when={isError}>
+            <div className="w-full h-96 rounded-lg bg-gray-100 animate-pulse"></div>
+          </Show>
+
+          <Show when={Boolean(data?.data)}>
+            {data?.data?.map((cake, index) => (
+              <CakeCard cake={cake} key={index} />
+            ))}
+          </Show>
+
         </div>
 
         <div className="mt-12 text-center">

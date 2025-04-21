@@ -10,6 +10,8 @@ import React from 'react'
 import Show from '../show'
 import { useCartStore } from '@/store/cart'
 import { Badge } from '@/components/ui/badge'
+import { useAuth } from '@/contexts/auth-context';
+import { useRouter } from 'next/navigation';
 
 type CakeCardProps = {
   cake: Partial<Cake>
@@ -18,6 +20,21 @@ type CakeCardProps = {
 const CakeCard = (props: CakeCardProps) => {
   const { cake } = props
   const { addItem } = useCartStore()
+  const { email } = useAuth();
+  const router = useRouter()
+
+  function handleAddToCart(cakeId: number, title: string, price: number) {
+    if (!email) {
+      router.push("/auth/login?callbackUrl=/shop")
+      return
+    }
+    addItem({
+      id: cakeId ?? 0,
+      title: title ?? "",
+      price: Number(price),
+      quantity: 1,
+    })
+  }
 
   return (
     <Card key={cake.id} className="overflow-hidden transition-all hover:shadow-lg">
@@ -49,12 +66,11 @@ const CakeCard = (props: CakeCardProps) => {
         <div className="flex items-center justify-between mb-4">
           <p className="font-bold text-pink-800">{formatCurrency(Number((cake?.price?.toFixed(2) ?? 0)), "id-ID")}</p>
         </div>
-        <Button onClick={() => addItem({
-          id: cake.id ?? 0,
-          title: cake.title ?? "",
-          price: Number(cake.price),
-          quantity: 1,
-        })} className="w-full bg-pink-600 hover:bg-pink-700">Add to Cart</Button>
+        <Button
+          className="w-full bg-pink-600 hover:bg-pink-700"
+          onClick={() => handleAddToCart(cake.id as number, cake.title as string, Number(cake.price))}>
+          Add to cart
+        </Button>
       </CardContent>
     </Card>
   )

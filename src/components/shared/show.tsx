@@ -3,7 +3,7 @@ import React from 'react'
 type ShowProps = {
   children: React.ReactNode
   fallback?: React.ReactNode
-  when?: boolean
+  when: boolean
 }
 
 const Show = (props: ShowProps) => {

@@ -10,6 +10,7 @@ export function getCakes(params: CakesQueryParams) {
         title: params.title,
         price: params.price,
         category: params.category,
+        limit: params.limit || 10,
       },
     })
   );

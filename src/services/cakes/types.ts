@@ -16,8 +16,9 @@ export interface DeletedAt {
 export type cakeCategory = "all" | "wedding_cake" | "birthday_cake" | "cup_cake" | "seasonal_cake" | "other";
 
 export type CakesQueryParams = {
-  page: number;
-  title: string;
+  page?: number;
+  title?: string;
   price?: number;
-  category: cakeCategory | "";
+  limit?: number;
+  category?: cakeCategory | "";
 }

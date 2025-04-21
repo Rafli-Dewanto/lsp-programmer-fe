@@ -9,12 +9,14 @@ import { useLogin } from "@/services/auth/mutations/use-auth";
 import { getErrorMessage } from "@/utils/error";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const loginMutation = useLogin();
+  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +26,11 @@ export default function LoginPage() {
           alert(data?.data);
         }
         localStorage.setItem(LS_TOKEN, data?.data as string);
-        window.location.href = "/";
+        if (searchParams.get("callbackUrl")) {
+          window.location.href = searchParams.get("callbackUrl") || "/";
+        } else {
+          window.location.href = "/";
+        }
       },
       onError: (error) => {
         alert(getErrorMessage(error));
