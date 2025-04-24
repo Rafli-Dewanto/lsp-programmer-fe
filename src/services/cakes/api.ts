@@ -28,7 +28,7 @@ export function createCake(payload: Cake) {
       description: payload.description,
       price: Number(payload.price),
       category: payload.category,
-      image: payload.image_url,
+      image: payload.image,
     })
   );
 }

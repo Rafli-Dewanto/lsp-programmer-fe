@@ -122,7 +122,7 @@ const Header = () => {
                 </div>
 
                 <Show when={role === "admin"}>
-                  <div className="mt-2 p-3 rounded-lg bg-pink-50 space-y-4">
+                  <div className="mt-2 p-3 rounded-lg bg-pink-100 space-y-4">
                     <h3 className="text-sm font-medium text-pink-600 mb-2">Admin Panel</h3>
                     <AdminNavigation />
                   </div>

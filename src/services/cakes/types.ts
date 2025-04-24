@@ -4,8 +4,8 @@ export interface Cake {
   description: string;
   price: number;
   category: cakeCategory;
-  rating: number;
-  image_url: string;
+  rating?: number;
+  image: string;
 }
 
 export interface DeletedAt {

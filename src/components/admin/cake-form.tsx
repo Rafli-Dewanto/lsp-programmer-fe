@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Cake, cakeCategory } from "@/services/cakes/types";
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import Show from "../shared/show";
 
 type CakeFormProps = {
   initialData?: Partial<Cake>;
@@ -108,21 +109,21 @@ const CakeForm = (props: CakeFormProps) => {
                 </Select>
               )}
             />
-            {errors.category && (
-              <p className="text-sm text-red-500">{errors.category.message}</p>
-            )}
+            <Show when={!!errors.category}>
+              <p className="text-sm text-red-500">{errors?.category?.message}</p>
+            </Show>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="image_url">Image URL</Label>
             <Input
               id="image_url"
-              {...register("image_url", { required: "Image URL is required" })}
+              {...register("image", { required: "Image URL is required" })}
               placeholder="Enter cake image URL"
             />
-            {errors.image_url && (
-              <p className="text-sm text-red-500">{errors.image_url.message}</p>
-            )}
+            <Show when={!!errors.image}>
+              <p className="text-sm text-red-500">{errors.image?.message}</p>
+            </Show>
           </div>
 
           <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" disabled={isLoading}>
