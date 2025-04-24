@@ -1,52 +1,69 @@
-"use client";
+"use client"
 
-import AdminNavigation from '@/components/admin/admin-navigation';
-import Show from '@/components/shared/show';
-import { Button } from '@/components/ui/button';
-import { ROUTES } from '@/constants';
-import { useAuth } from '@/contexts/auth-context';
-import { useCartStore } from '@/store/cart';
-import Link from 'next/link';
+import AdminNavigation from '@/components/admin/admin-navigation'
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useAuth } from '@/contexts/auth-context'
+import { ChevronDown, LogOut, User } from "lucide-react"
+import Link from 'next/link'
+import Show from '../show'
 
-const RightHeader = () => {
-  const { email, logout, role } = useAuth();
-  const { items } = useCartStore();
+export default function ProfileDropdown() {
+  const { email, role, logout } = useAuth()
 
-  return (
-    <div className="flex items-center gap-4">
+  // If not logged in, show sign-in button
+  if (!email) {
+    return (
       <Link href="/auth/login" className="hidden sm:block">
-        <Show when={!!email} fallback={(
-          <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-800">
-            Sign in
-          </Button>
-        )}>
-          {email}
-        </Show>
-      </Link>
-      <Show when={role === "admin"}>
-        <AdminNavigation />
-      </Show>
-      <Show when={!!email}>
-        <Button onClick={logout} size="sm" className="bg-pink-600 hover:bg-pink-700">
-          Log out
+        <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-600">
+          Sign in
         </Button>
-        <Link href={ROUTES.CART} className="hidden sm:flex items-center gap-2">
-          <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-800">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-            {items.length > 0 && (
-              <span className="ml-1 bg-pink-600 text-white rounded-full px-2 py-0.5 text-xs">
-                {items.length}
-              </span>
-            )}
-          </Button>
-        </Link>
-      </Show>
-    </div>
+      </Link>
+    )
+  }
+
+  // If logged in, show dropdown
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-600 flex items-center gap-2">
+          <User className="h-4 w-4" />
+          <span className="max-w-[150px] truncate">{email}</span>
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <Show when={role === "admin"}>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-pink-600">Admin Panel</DropdownMenuLabel>
+          <div className="px-2 py-1.5 space-y-3">
+            <AdminNavigation />
+          </div>
+        </Show>
+
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={logout} className="text-pink-600 focus:text-pink-700 cursor-pointer">
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
-
-export default RightHeader
