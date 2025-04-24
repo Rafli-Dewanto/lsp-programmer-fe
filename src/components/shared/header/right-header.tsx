@@ -14,7 +14,7 @@ const RightHeader = () => {
 
   return (
     <div className="flex items-center gap-4">
-      <Link href="/login" className="hidden sm:block">
+      <Link href="/auth/login" className="hidden sm:block">
         <Show when={!!email} fallback={(
           <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-800">
             Sign in

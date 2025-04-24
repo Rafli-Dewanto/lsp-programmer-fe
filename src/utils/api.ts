@@ -29,6 +29,9 @@ export const apiResolver = async <ClientResponse = any>(
     return res.data;
   } catch (err: unknown) {
     if (err instanceof AxiosError) {
+      if (err.response?.status === 401) {
+        throw new Error("Unauthorized");
+      }
       throw err;
     }
     if (err instanceof Error) {

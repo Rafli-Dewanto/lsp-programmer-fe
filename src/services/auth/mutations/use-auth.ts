@@ -25,12 +25,7 @@ export function useLogin() {
 }
 
 export function useAuthorize() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: authorize,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QK_CUSTOMER] });
-    },
   });
 }
