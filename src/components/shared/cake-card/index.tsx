@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 
-type CakeCardProps = {
+interface CakeCardProps extends React.ComponentPropsWithoutRef<'div'> {
   cake: Partial<Cake>
 }
 
@@ -40,7 +40,7 @@ const CakeCard = (props: CakeCardProps) => {
     <Card key={cake.id} className="overflow-hidden transition-all hover:shadow-lg">
       <div className="relative h-[200px]">
         <Image
-          src={cake.image_url || "https://unsplash.com/photos/a-chocolate-cake-with-chocolate-frosting-OSSkMJYU8Wc"}
+          src={cake.image || "https://unsplash.com/photos/a-chocolate-cake-with-chocolate-frosting-OSSkMJYU8Wc"}
           alt={cake.title || ""}
           fill
           className="object-cover"

@@ -29,6 +29,7 @@ import { Filter, Search, X } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import CakeCard from "../shared/cake-card"
+import Link from "next/link"
 
 export default function ShopPage() {
   const router = useRouter()
@@ -375,7 +376,9 @@ export default function ShopPage() {
                     {/* Products grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                       {data?.data?.map((cake) => (
-                        <CakeCard key={cake.id} cake={cake} />
+                        <Link key={cake.id} href={`/shop/${cake.id}`}>
+                          <CakeCard cake={cake} />
+                        </Link>
                       ))}
                     </div>
 
