@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from '@/contexts/auth-context'
-import { ChevronDown, LogOut, User } from "lucide-react"
+import { ChevronDown, HeartPulse, LogOut, User } from "lucide-react"
 import Link from 'next/link'
 import Show from '../show'
 
@@ -48,6 +48,12 @@ export default function ProfileDropdown() {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
+          <Link href={'/wishlist'}>
+            <DropdownMenuItem>
+              <HeartPulse className="mr-2 h-4 w-4" />
+              <span>Wishlist</span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
 
         <Show when={role === "admin"}>

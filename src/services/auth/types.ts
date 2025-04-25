@@ -1,4 +1,4 @@
-export type token = string;
+export type Token = string;
 
 export interface Register {
   name: string;
@@ -8,7 +8,7 @@ export interface Register {
 }
 
 export interface AuthResponse {
-  data: token;
+  data: Token;
 }
 
 export interface Login {

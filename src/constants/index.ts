@@ -24,6 +24,7 @@ export const ROUTES = {
 // tanstack query keys
 export const QK_CUSTOMER = "customers";
 export const QK_CAKES = "cakes";
+export const QK_CARTS = "carts";
 export const QK_ORDERS = "orders";
 export const QK_WISHLIST = "wishlist";
 // ====================================================================================================================
