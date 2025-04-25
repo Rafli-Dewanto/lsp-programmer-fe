@@ -1,18 +1,18 @@
 "use client";
 
+import Show from "@/components/shared/show";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth-context";
+import { useCake } from "@/services/cakes/queries/use-cakes";
 import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/utils/string";
 import { Heart, Minus, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { useAuth } from "@/contexts/auth-context";
-import { Badge } from "@/components/ui/badge";
-import { useCake } from "@/services/cakes/queries/use-cakes";
-import Show from "@/components/shared/show";
+import { useState } from "react";
 
 type CakeDetailProps = {
   id: string;

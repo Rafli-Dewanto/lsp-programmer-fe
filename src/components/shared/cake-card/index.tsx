@@ -12,6 +12,9 @@ import { useCartStore } from '@/store/cart'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
+import { useWishlist } from '@/services/wishlist/queries/use-wishlist';
+import { useAddWishlist } from '@/services/wishlist/mutations/use-add-wishlist';
+import { useRemoveWishlist } from '@/services/wishlist/mutations/use-remove-wislist';
 
 interface CakeCardProps extends React.ComponentPropsWithoutRef<'div'> {
   cake: Partial<Cake>
@@ -22,8 +25,26 @@ const CakeCard = (props: CakeCardProps) => {
   const { addItem } = useCartStore()
   const { email } = useAuth();
   const router = useRouter()
+  const { data: wishlist } = useWishlist();
+  const addToWishlist = useAddWishlist();
+  const removeFromWishlist = useRemoveWishlist();
 
-  function handleAddToCart(cakeId: number, title: string, price: number) {
+  const isInWishlist = wishlist?.data?.some((item) => item.id === cake.id);
+
+  const handleWishlistClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInWishlist) {
+      removeFromWishlist.mutate(cake.id ?? 0);
+    } else {
+      addToWishlist.mutate(cake.id ?? 0);
+    }
+  };
+
+
+  function handleAddToCart(e: React.MouseEvent<HTMLButtonElement>, cakeId: number, title: string, price: number) {
+    e.preventDefault()
+    e.stopPropagation()
     if (!email) {
       router.push("/auth/login?callbackUrl=/shop")
       return
@@ -45,8 +66,12 @@ const CakeCard = (props: CakeCardProps) => {
           fill
           className="object-cover"
         />
-        <button className="absolute top-2 right-2 rounded-full bg-white p-1.5 text-pink-800 shadow-sm">
-          <Heart className="h-4 w-4" />
+        <button
+          onClick={(e) => handleWishlistClick(e)}
+          className="absolute top-2 right-2 rounded-full bg-white p-1.5 text-pink-800 shadow-sm cursor-pointer">
+          <Show when={isInWishlist ?? false} fallback={<Heart className="h-4 w-4" />}>
+            <Heart className="h-4 w-4 fill-pink-800" />
+          </Show>
         </button>
         <Show when={!!cake?.category}>
           <Badge className="absolute top-2 left-2 bg-pink-600 hover:bg-pink-700">
@@ -68,11 +93,11 @@ const CakeCard = (props: CakeCardProps) => {
         </div>
         <Button
           className="w-full bg-pink-600 hover:bg-pink-700"
-          onClick={() => handleAddToCart(cake.id as number, cake.title as string, Number(cake.price))}>
+          onClick={(e) => handleAddToCart(e, cake.id as number, cake.title as string, Number(cake.price))}>
           Add to cart
         </Button>
       </CardContent>
-    </Card>
+    </Card >
   )
 }
 
