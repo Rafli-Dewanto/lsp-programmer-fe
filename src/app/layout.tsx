@@ -3,6 +3,7 @@ import Header from "@/components/shared/header";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ReactQueryProviders } from "@/contexts/react-query";
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
             <Header />
             {children}
             <Footer />
+            <Toaster />
           </ReactQueryProviders>
         </AuthProvider>
       </body>

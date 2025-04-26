@@ -1,20 +1,20 @@
 "use client";
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Cake } from '@/services/cakes/types'
-import { formatCurrency } from '@/utils/string'
-import { Heart, Star } from 'lucide-react'
-import Image from 'next/image'
-import React from 'react'
-import Show from '../show'
-import { useCartStore } from '@/store/cart'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/auth-context';
-import { useRouter } from 'next/navigation';
-import { useWishlist } from '@/services/wishlist/queries/use-wishlist';
+import { Cake } from '@/services/cakes/types';
+import { useAddCart } from '@/services/cart/mutations/use-add-cart';
 import { useAddWishlist } from '@/services/wishlist/mutations/use-add-wishlist';
 import { useRemoveWishlist } from '@/services/wishlist/mutations/use-remove-wislist';
+import { useWishlist } from '@/services/wishlist/queries/use-wishlist';
+import { formatCurrency } from '@/utils/string';
+import { Heart, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import Show from '../show';
 
 interface CakeCardProps extends React.ComponentPropsWithoutRef<'div'> {
   cake: Partial<Cake>
@@ -22,7 +22,7 @@ interface CakeCardProps extends React.ComponentPropsWithoutRef<'div'> {
 
 const CakeCard = (props: CakeCardProps) => {
   const { cake } = props
-  const { addItem } = useCartStore()
+  const addToCartMutation = useAddCart();
   const { email } = useAuth();
   const router = useRouter()
   const { data: wishlist } = useWishlist();
@@ -42,19 +42,17 @@ const CakeCard = (props: CakeCardProps) => {
   };
 
 
-  function handleAddToCart(e: React.MouseEvent<HTMLButtonElement>, cakeId: number, title: string, price: number) {
+  function handleAddToCart(e: React.MouseEvent<HTMLButtonElement>, cakeId: number) {
     e.preventDefault()
     e.stopPropagation()
     if (!email) {
       router.push("/auth/login?callbackUrl=/shop")
       return
     }
-    addItem({
-      id: cakeId ?? 0,
-      title: title ?? "",
-      price: Number(price),
+    addToCartMutation.mutate({
+      cake_id: cakeId,
       quantity: 1,
-    })
+    });
   }
 
   return (
@@ -93,7 +91,7 @@ const CakeCard = (props: CakeCardProps) => {
         </div>
         <Button
           className="w-full bg-pink-600 hover:bg-pink-700"
-          onClick={(e) => handleAddToCart(e, cake.id as number, cake.title as string, Number(cake.price))}>
+          onClick={(e) => handleAddToCart(e, cake.id as number)}>
           Add to cart
         </Button>
       </CardContent>

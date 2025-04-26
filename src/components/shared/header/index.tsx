@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/s
 import { ROUTES } from '@/constants'
 import { useAuth } from '@/contexts/auth-context'
 import { useMediaQuery } from '@/hooks/use-media-query'
-import { useCartStore } from '@/store/cart'
+import { useCarts } from '@/services/cart/queries/use-carts'
 import { Menu, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -18,7 +18,8 @@ const Header = () => {
   const pathname = usePathname()
   const mobile = useMediaQuery('(max-width: 1324px)')
   const { email, role, logout } = useAuth()
-  const { items } = useCartStore();
+  const { data: carts } = useCarts();
+  const totalItems = carts?.data?.reduce((acc, item) => acc + item.quantity, 0);
 
   const linkClasses = (href: string) =>
     pathname === href
@@ -56,11 +57,11 @@ const Header = () => {
                   <circle cx="20" cy="21" r="1" />
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                 </svg>
-                {items.length > 0 && (
+                <Show when={(totalItems ?? 0) > 0}>
                   <span className="ml-1 bg-pink-600 text-white rounded-full px-2 py-0.5 text-xs">
-                    {items.length}
+                    {totalItems}
                   </span>
-                )}
+                </Show>
               </Button>
             </Link>
           </nav>
@@ -99,9 +100,9 @@ const Header = () => {
                   <Button variant={'outline'} className='w-full flex items-center justify-center gap-2 border-pink-200 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'>
                     <ShoppingBag className="h-4 w-4" />
                     <p>Cart</p>
-                    <Show when={items.length > 0}>
+                    <Show when={(totalItems ?? 0) > 0}>
                       <span className="ml-1 bg-pink-600 text-white rounded-full px-2 py-0.5 text-xs">
-                        {items.length}
+                        {totalItems}
                       </span>
                     </Show>
                   </Button>

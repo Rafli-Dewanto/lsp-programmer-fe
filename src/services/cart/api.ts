@@ -8,7 +8,7 @@ export function AddToCart(payload: AddToCartPayload) {
 }
 
 export function GetCustomerCarts() {
-  return apiResolver<Response<CartResponse, MetaData>>(() =>
+  return apiResolver<Response<CartResponse[], MetaData>>(() =>
     axios.get(`/carts/customer`)
   );
 }

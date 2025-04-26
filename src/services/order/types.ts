@@ -3,7 +3,6 @@ export interface OrderPayload {
 }
 
 export interface Item {
-  title: string;
   cake_id: number;
   quantity: number;
   price: number;
