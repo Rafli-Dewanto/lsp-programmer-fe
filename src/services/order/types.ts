@@ -5,6 +5,7 @@ export interface OrderPayload {
 export interface Item {
   cake_id: number;
   quantity: number;
+  title?: string;
   price: number;
 }
 

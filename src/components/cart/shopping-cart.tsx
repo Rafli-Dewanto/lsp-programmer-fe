@@ -28,9 +28,12 @@ const ShoppingCart = () => {
 
   function handleCheckout() {
     setIsProcessing(true);
+    console.log("cart?.data", cart?.data);
+
     orderMutation.mutate({
       items: cart?.data?.map((item) => ({
-        cake_id: item.id,
+        cake_id: item.cake_id,
+        title: item.name,
         quantity: item.quantity,
         price: item.price,
       })) || [],
