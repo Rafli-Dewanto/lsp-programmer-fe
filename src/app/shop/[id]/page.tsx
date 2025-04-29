@@ -1,9 +1,10 @@
 import CakeDetail from '@/components/shop/cake-detail/cake-detail'
 
-const CakeDetailPage = ({ params }: { params: { id: string } }) => {
+const CakeDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   return (
     <main>
-      <CakeDetail id={params.id} />
+      <CakeDetail id={id} />
     </main>
   )
 }
