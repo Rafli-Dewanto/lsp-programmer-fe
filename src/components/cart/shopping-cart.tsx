@@ -40,6 +40,10 @@ const ShoppingCart = () => {
     }, {
       onSuccess: (data) => {
         if (data.data?.redirect_url) {
+          // remove cart items
+          cart?.data?.forEach((item) => {
+            removeCartMutation.mutate(item.id);
+          });
           window.location.href = data.data.redirect_url;
         } else {
           toast(`Order Placed Successfully`);
