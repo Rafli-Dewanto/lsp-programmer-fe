@@ -4,15 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAddCart } from '@/services/cart/mutations/use-add-cart';
 import { useRemoveCart } from '@/services/cart/mutations/use-remove-cart';
 import { useCarts } from '@/services/cart/queries/use-carts';
 import { usePlaceOrder } from '@/services/order/mutations/use-place-order';
 import { formatCurrency } from '@/utils/string';
 import { motion } from 'framer-motion';
-import { AlertCircle, ArrowRight, ShoppingCart as CartIcon, Package } from 'lucide-react';
+import { AlertCircle, ArrowRight, ShoppingCart as CartIcon, Package, Check } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Show from '../shared/show';
 
@@ -22,36 +23,87 @@ const ShoppingCart = () => {
   const removeCartMutation = useRemoveCart();
   const orderMutation = usePlaceOrder();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
+  const [selectAll, setSelectAll] = useState(false);
 
-  const total = cart?.data?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
-  const totalItems = cart?.data?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  // Initialize selected items when cart data loads
+  useEffect(() => {
+    if (cart?.data?.length) {
+      const initialSelection: Record<number, boolean> = {};
+      cart.data.forEach(item => {
+        initialSelection[item.id] = false;
+      });
+      setSelectedItems(initialSelection);
+    }
+  }, [cart?.data]);
 
+  // Update selectAll state based on individual selections
+  useEffect(() => {
+    if (cart?.data?.length && Object.keys(selectedItems).length) {
+      const allSelected = cart.data.every(item => selectedItems[item.id]);
+      setSelectAll(allSelected);
+    } else {
+      setSelectAll(false);
+    }
+  }, [selectedItems, cart?.data]);
+
+  // Toggle individual item selection
+  const toggleItemSelection = (itemId: number) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  // Toggle select all items
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+
+    const updatedSelection: Record<number, boolean> = {};
+    cart?.data?.forEach(item => {
+      updatedSelection[item.id] = newSelectAll;
+    });
+    setSelectedItems(updatedSelection);
+  };
+
+  // Calculate totals based on selected items only
+  const selectedItemsList = cart?.data?.filter(item => selectedItems[item.id]) || [];
+  const total = selectedItemsList.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
+  const totalItems = selectedItemsList.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  const selectedItemsCount = selectedItemsList.length;
+
+  // Handle checkout of selected items only
   function handleCheckout() {
+    if (selectedItemsCount === 0) {
+      toast.error("Please select items to checkout");
+      return;
+    }
+
     setIsProcessing(true);
-    console.log("cart?.data", cart?.data);
 
     orderMutation.mutate({
-      items: cart?.data?.map((item) => ({
+      items: selectedItemsList.map((item) => ({
         cake_id: item.cake_id,
         title: item.name,
         quantity: item.quantity,
         price: item.price,
-      })) || [],
+      })),
     }, {
       onSuccess: (data) => {
         if (data.data?.redirect_url) {
-          // remove cart items
-          cart?.data?.forEach((item) => {
-            removeCartMutation.mutate(item.id);
-          });
+          // remove only the selected cart items
+          selectedItemsList.forEach((item) => removeCartMutation.mutate(item.id));
           window.location.href = data.data.redirect_url;
         } else {
-          toast(`Order Placed Successfully`);
+          toast.success(`Order Placed Successfully`);
+          // remove only the selected cart items
+          selectedItemsList.forEach((item) => removeCartMutation.mutate(item.id));
         }
         setIsProcessing(false);
       },
       onError: (error) => {
-        toast(`Error Processing Order ${error.message}`);
+        toast.error(`Error Processing Order: ${error.message}`);
         setIsProcessing(false);
       },
     });
@@ -71,12 +123,26 @@ const ShoppingCart = () => {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <CartIcon className="text-pink-600" size={24} />
-          Your Cart {totalItems > 0 && (
+          Your Cart {(cart?.data?.length ?? 0) > 0 && (
             <span className="ml-2 bg-pink-100 text-pink-700 text-sm font-medium px-2.5 py-0.5 rounded-full">
-              {totalItems} {totalItems === 1 ? 'item' : 'items'}
+              {cart?.data?.length} {cart?.data?.length === 1 ? 'item' : 'items'}
             </span>
           )}
         </h2>
+
+        {/* Select All Checkbox */}
+        {(cart?.data?.length ?? 0) > 0 && (
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="select-all"
+              checked={selectAll}
+              onCheckedChange={toggleSelectAll}
+            />
+            <label htmlFor="select-all" className="text-sm font-medium text-gray-700 cursor-pointer">
+              Select All
+            </label>
+          </div>
+        )}
       </div>
 
       <Show when={!cart?.data?.length}>
@@ -108,9 +174,19 @@ const ShoppingCart = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="overflow-hidden border border-gray-100 rounded-2xl hover:shadow-md transition-all duration-200">
+                <Card className={`overflow-hidden border rounded-2xl transition-all duration-200 ${selectedItems[item.id] ? 'border-pink-300 bg-pink-50 shadow-md' : 'border-gray-100 hover:shadow-md'
+                  }`}>
                   <CardContent className="p-0">
                     <div className="flex items-center p-4">
+                      {/* Checkbox for item selection */}
+                      <div className="mr-3">
+                        <Checkbox
+                          checked={selectedItems[item.id] || false}
+                          onCheckedChange={() => toggleItemSelection(item.id)}
+                          id={`item-${item.id}`}
+                        />
+                      </div>
+
                       <div className="relative bg-pink-50 rounded-xl w-16 h-16 flex items-center justify-center mr-4 overflow-hidden">
                         <Image
                           src={item.image}
@@ -168,9 +244,21 @@ const ShoppingCart = () => {
 
         <Separator className="my-6 bg-gray-100" />
 
+        <div className="p-4 bg-pink-50 rounded-xl mb-6">
+          <div className="flex items-center mb-2">
+            <Check size={16} className="text-green-600 mr-2" />
+            <p className="text-sm font-medium text-gray-700">
+              {selectedItemsCount} {selectedItemsCount === 1 ? 'item' : 'items'} selected for checkout
+            </p>
+          </div>
+          {selectedItemsCount === 0 && (
+            <p className="text-xs text-gray-500">Please select items to proceed with checkout</p>
+          )}
+        </div>
+
         <div className="space-y-3">
           <div className="flex justify-between items-center text-gray-600">
-            <p>Subtotal</p>
+            <p>Subtotal ({totalItems} items)</p>
             <p>{formatCurrency(total, 'id-ID')}</p>
           </div>
           <div className="flex justify-between items-center text-gray-600">
@@ -186,8 +274,11 @@ const ShoppingCart = () => {
 
         <Button
           onClick={handleCheckout}
-          disabled={isProcessing || !cart?.data?.length}
-          className="w-full mt-6 bg-pink-600 hover:bg-pink-700 text-white text-lg py-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg"
+          disabled={isProcessing || selectedItemsCount === 0}
+          className={`w-full mt-6 text-white text-lg py-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg ${selectedItemsCount === 0
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-pink-600 hover:bg-pink-700'
+            }`}
         >
           {isProcessing ? (
             <>
@@ -196,7 +287,7 @@ const ShoppingCart = () => {
             </>
           ) : (
             <>
-              Proceed to Checkout
+              {selectedItemsCount === 0 ? 'Select items to checkout' : 'Proceed to Checkout'}
               <ArrowRight size={20} />
             </>
           )}

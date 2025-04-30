@@ -1,7 +1,7 @@
 import { LS_TOKEN } from "@/constants";
 import Axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const baseURL = process.env.NODE_ENV === "production" ? "https://api-cakeville.dewanto.dev" : "http://localhost:8080";
 const axios = Axios.create({
   baseURL,
 });
