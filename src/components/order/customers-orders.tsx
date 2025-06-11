@@ -16,6 +16,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Show from "../shared/show";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
+import InvoicePrint from "./invoice-print";
 
 const CustomersOrders = () => {
   const searchParams = useSearchParams();
@@ -58,7 +59,7 @@ const CustomersOrders = () => {
       </Show>
 
       <Show when={!isLoading && !error && orders.length > 0}>
-        <div className="space-y-4">
+        <div className="space-y-4 px-8">
           {orders?.map((order) => (
             <Card key={order.id} className="border border-pink-200">
               <CardContent className="p-4">
@@ -74,7 +75,7 @@ const CustomersOrders = () => {
                       {order.delivery_address}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right space-y-2">
                     <p className="text-pink-600 font-bold">
                       {formatCurrency(order.total_price, "id-ID")}
                     </p>
@@ -88,6 +89,9 @@ const CustomersOrders = () => {
                     >
                       {order.status}
                     </span>
+                    <div className="flex items-center gap-3 my-2">
+                      <InvoicePrint order={order} />
+                    </div>
                   </div>
                 </div>
                 {/* cake items */}

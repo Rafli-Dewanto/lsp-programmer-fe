@@ -58,8 +58,7 @@ export default function ProfileDropdown() {
 
         <Show when={role === "admin"}>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel className="text-pink-600">Admin Panel</DropdownMenuLabel>
-          <div className="px-2 py-1.5 space-y-3">
+          <div className="space-y-3">
             <AdminNavigation />
           </div>
         </Show>
