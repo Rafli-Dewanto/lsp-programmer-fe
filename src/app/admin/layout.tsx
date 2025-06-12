@@ -1,9 +1,11 @@
 "use client";
 
+import { roles } from '@/constants';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+const allowedRoles = roles.map(role => role.value);
 export default function AdminLayout({
   children,
 }: {
@@ -13,12 +15,14 @@ export default function AdminLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (role !== 'admin') {
+    if (!allowedRoles.includes(role!)) {
       router.push('/auth/login');
     }
-  }, [role, router]);
+    // ignore router
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role]);
 
-  if (role !== 'admin') return null;
+  if (!allowedRoles.includes(role!)) return null;
 
   return (
     <div className="min-h-screen">

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import Show from "../shared/show"
-import { Edit, ShoppingBag, ChartSpline, PersonStanding } from "lucide-react"
+import { Edit, ShoppingBag, ChartSpline, PersonStanding, PackageOpen } from "lucide-react"
 
 const AdminNavigation = () => {
   const { role } = useAuth()
@@ -62,6 +62,15 @@ const AdminNavigation = () => {
             <PersonStanding className="w-3.5 h-3.5" />
           </div>
           <span className="text-sm font-medium">Employees</span>
+        </Link>
+        <Link
+          className="flex items-center gap-2.5 w-full px-3 py-2 text-gray-700 hover:text-pink-700 bg-white hover:bg-pink-50 rounded-md transition-colors duration-150 group"
+          href="/admin/inventories"
+        >
+          <div className="flex items-center justify-center w-7 h-7 bg-pink-100 text-pink-600 rounded-md group-hover:bg-pink-200 transition-colors duration-150">
+            <PackageOpen className="w-3.5 h-3.5" />
+          </div>
+          <span className="text-sm font-medium">Inventories</span>
         </Link>
       </div>
     </Show>

@@ -27,6 +27,8 @@ export const QK_CAKES = "cakes";
 export const QK_CARTS = "carts";
 export const QK_ORDERS = "orders";
 export const QK_WISHLIST = "wishlist";
+export const QK_INVENTORIES = "inventories";
+export const QK_RESERVATIONS = "reservations";
 // ====================================================================================================================
 // others
 export type EMPLOYEE_ROLES = "admin" | "kitchen_staff" | "waitress" | "cashier"
