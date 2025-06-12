@@ -5,6 +5,11 @@ import { useEmployees } from "@/services/employees/queries/use-employees"
 import { Edit2, Filter, Plus, Search, Trash2, User } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Button } from "../ui/button"
+import { toast } from "sonner"
+import useDisclosure from "@/hooks/use-disclosure"
+import { getErrorMessage } from "@/utils/error"
 
 const EmployeesManagement = () => {
   const { data: employees, isLoading } = useEmployees();
@@ -12,6 +17,9 @@ const EmployeesManagement = () => {
 
   const [searchTerm, setSearchTerm] = useState("")
   const [filterRole, setFilterRole] = useState("all")
+
+  const { close, isOpen, open } = useDisclosure();
+  const [idToDelete, setIdToDelete] = useState<string | null>(null);
 
   const roles = [
     { value: "admin", label: "Admin", color: "bg-pink-100 text-pink-800" },
@@ -138,8 +146,8 @@ const EmployeesManagement = () => {
                           </Link>
                           <button
                             onClick={() => {
-                              confirm("Are you sure you want to delete this employee?")
-                              deleteEmployeeMutation.mutate(employee.id.toString())
+                              setIdToDelete(employee.id.toString());
+                              open();
                             }}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                             title="Delete employee"
@@ -167,6 +175,38 @@ const EmployeesManagement = () => {
           </div>
         </div>
       </div>
+      <Dialog open={isOpen} onOpenChange={open}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this employee? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => {
+              setIdToDelete(null);
+              close();
+            }}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={() => {
+              deleteEmployeeMutation.mutate(idToDelete!, {
+                onSuccess: () => {
+                  setIdToDelete(null);
+                  close();
+                  toast.success("Employee deleted successfully");
+                },
+                onError: (error) => {
+                  toast.error(getErrorMessage(error));
+                },
+              });
+            }} disabled={deleteEmployeeMutation.isPending}>
+              {deleteEmployeeMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

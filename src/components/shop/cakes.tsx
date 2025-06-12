@@ -257,7 +257,6 @@ export default function ShopPage() {
                           }}
                           className="ml-1"
                         >
-                          <X className="h-3 w-3" />
                         </button>
                       </Badge>
                     )}

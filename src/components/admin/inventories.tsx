@@ -7,11 +7,17 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { formatCurrency } from "@/utils/string";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import useDisclosure from "@/hooks/use-disclosure";
+import { getErrorMessage } from "@/utils/error";
+import { toast } from "sonner";
 
 const InventoriesManagement = () => {
   const { data: inventories, isLoading } = useInventories();
   const deleteInventoryMutation = useDeleteInventory();
   const [searchQuery, setSearchQuery] = useState("");
+  const { close, isOpen, open } = useDisclosure();
+  const [idToDelete, setIdToDelete] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -101,11 +107,9 @@ const InventoriesManagement = () => {
                         variant="outline"
                         size="sm"
                         className="text-red-600 hover:text-red-700"
-                        onClick={async () => {
-                          if (
-                            confirm("Are you sure you want to delete this inventory?")
-                          )
-                            deleteInventoryMutation.mutate(inventory.id.toString());
+                        onClick={() => {
+                          setIdToDelete(inventory.id.toString());
+                          open();
                         }}
                         title="Delete inventory"
                       >
@@ -129,6 +133,38 @@ const InventoriesManagement = () => {
           )}
         </div>
       </div>
+      <Dialog open={isOpen} onOpenChange={open}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this inventory? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => {
+              setIdToDelete(null);
+              close();
+            }}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={() => {
+              deleteInventoryMutation.mutate(idToDelete!, {
+                onSuccess: () => {
+                  setIdToDelete(null);
+                  close();
+                  toast.success("Inventory deleted successfully");
+                },
+                onError: (error) => {
+                  toast.error(getErrorMessage(error));
+                },
+              });
+            }} disabled={deleteInventoryMutation.isPending}>
+              {deleteInventoryMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
