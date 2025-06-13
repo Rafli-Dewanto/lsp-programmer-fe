@@ -43,7 +43,7 @@ const SalesCharts = ({ filteredOrders, popularItems }: SalesChartsProps) => {
                 type="monotone"
                 dataKey="total"
                 stroke="#FF1493"
-                name="Sales ($)"
+                name="Sales (IDR)"
               />
             </LineChart>
           </div>

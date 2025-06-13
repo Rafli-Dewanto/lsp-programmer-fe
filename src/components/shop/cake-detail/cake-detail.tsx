@@ -7,12 +7,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
 import { useCake } from "@/services/cakes/queries/use-cakes";
-import { useCartStore } from "@/store/cart";
+import { useAddCart } from "@/services/cart/mutations/use-add-cart";
 import { formatCurrency } from "@/utils/string";
 import { Heart, Minus, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useWishlist } from "@/services/wishlist/queries/use-wishlist";
+import { useAddWishlist } from "@/services/wishlist/mutations/use-add-wishlist";
+import { useRemoveWishlist } from "@/services/wishlist/mutations/use-remove-wislist";
 
 type CakeDetailProps = {
   id: string;
@@ -22,10 +25,28 @@ export default function CakeDetail(props: CakeDetailProps) {
   const { id } = props;
   const router = useRouter();
   const { email } = useAuth();
-  const { addItem } = useCartStore();
+  const addToCartMutation = useAddCart();
   const [quantity, setQuantity] = useState(1);
+  const { data: wishlist } = useWishlist();
+  const addToWishlist = useAddWishlist();
+  const removeFromWishlist = useRemoveWishlist();
 
   const { data: cake, isLoading, error } = useCake(Number(id));
+  const isInWishlist = wishlist?.data?.some((item) => item.id === cake?.data?.id);
+
+  const handleWishlistClick = () => {
+    if (!email) {
+      router.push("/auth/login?callbackUrl=/shop");
+      return;
+    }
+    if (cake?.data) {
+      if (isInWishlist) {
+        removeFromWishlist.mutate(cake.data.id);
+      } else {
+        addToWishlist.mutate(cake.data.id);
+      }
+    }
+  };
 
   const handleQuantityChange = (value: number) => {
     if (value >= 1) setQuantity(value);
@@ -37,10 +58,8 @@ export default function CakeDetail(props: CakeDetailProps) {
       return;
     }
     if (cake?.data) {
-      addItem({
-        id: cake.data.id,
-        title: cake.data.title,
-        price: cake.data.price,
+      addToCartMutation.mutate({
+        cake_id: cake.data.id,
         quantity: quantity,
       });
     }
@@ -74,8 +93,13 @@ export default function CakeDetail(props: CakeDetailProps) {
                 fill
                 className="object-cover rounded-lg"
               />
-              <button className="absolute top-4 right-4 rounded-full bg-white p-2 text-pink-800 shadow-sm">
-                <Heart className="h-5 w-5" />
+              <button
+                onClick={handleWishlistClick}
+                className="absolute top-4 right-4 rounded-full bg-white p-2 text-pink-800 shadow-sm cursor-pointer"
+              >
+                <Show when={!!isInWishlist} fallback={<Heart className="h-5 w-5" />}>
+                  <Heart className="h-5 w-5 fill-pink-800" />
+                </Show>
               </button>
               <Show when={Boolean(cake?.data?.category)}>
                 <Badge className="absolute top-4 left-4 bg-pink-600 hover:bg-pink-700">
