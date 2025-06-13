@@ -1,17 +1,23 @@
 "use client";
 
-import { useOrder } from '@/services/order/queries/use-order';
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import React from 'react';
-import { formatCurrency } from '@/utils/string';
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from '@/contexts/auth-context';
+import { useOrder } from '@/services/order/queries/use-order';
+import { usePaymentURL } from '@/services/payments/queries/use-payment-url';
+import { formatCurrency } from '@/utils/string';
+import { useState } from 'react';
+import Show from '../shared/show';
+import { Button } from '../ui/button';
+import { toast } from "sonner";
 
 const OrderHistory = () => {
   const { data, isLoading, error } = useOrder();
   const { email } = useAuth();
+  const [selectedPendingOrder, setSelectedPendingOrder] = useState<string | null>(null);
+  const { data: paymentData } = usePaymentURL(selectedPendingOrder ?? "");
 
   if (!email) {
     return <p className="text-center mt-8">Please log in to view your order history.</p>;
@@ -34,6 +40,16 @@ const OrderHistory = () => {
     return <p className="text-center mt-8 text-gray-500">You have no order history yet.</p>;
   }
 
+  const handlePayment = (orderID: string) => {
+    // this will trigger the payment hook and returns the payment URL
+    setSelectedPendingOrder(orderID);
+    if (!paymentData || !paymentData?.data) {
+      toast.error("Failed to load payment URL.");
+      return;
+    }
+    window.location.href = paymentData.data as string;
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
       <h1 className="text-3xl font-bold text-pink-600 mb-4">Order History</h1>
@@ -45,16 +61,25 @@ const OrderHistory = () => {
                 <p className="text-lg font-semibold text-gray-800">Order #{order.id}</p>
                 <p className="text-sm text-gray-500">{new Date(order.created_at).toLocaleString()}</p>
               </div>
-              <span
-                className={`text-sm font-medium px-3 py-1 rounded-full ${order.status === "completed"
-                  ? "bg-green-100 text-green-700"
-                  : order.status === "pending"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-gray-100 text-gray-600"
-                  }`}
-              >
-                {order.status}
-              </span>
+              <div className='flex flex-col items-center justify-center space-y-3.5'>
+                <span
+                  className={`text-sm font-medium px-3 py-1 rounded-full ${order.status === "completed"
+                    ? "bg-green-100 text-green-700"
+                    : order.status === "pending"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-gray-100 text-gray-600"
+                    }`}
+                >
+                  {order.status}
+                </span>
+                <Show when={order.status === "pending"}>
+                  <Button onClick={() => handlePayment(order.id.toString())}
+                    variant="outline"
+                    className="text-pink-600 border-pink-200 hover:bg-pink-50">
+                    Pay
+                  </Button>
+                </Show>
+              </div>
             </div>
 
             <Separator />

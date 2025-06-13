@@ -30,6 +30,7 @@ export const QK_WISHLIST = "wishlist";
 export const QK_INVENTORIES = "inventories";
 export const QK_RESERVATIONS = "reservations";
 export const QK_TABLES = "tables";
+export const QK_PAYMENTS = "payments";
 // ====================================================================================================================
 // others
 export type EMPLOYEE_ROLES = "admin" | "kitchen_staff" | "waitress" | "cashier"
