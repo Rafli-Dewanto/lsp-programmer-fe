@@ -20,9 +20,9 @@ export type Customer = {
 
 export type UpdateReservation = {
   status: string;
-  table_number: number;
+  table_number?: number;
   guest_count: number;
-  reserve_date: Date;
+  reserve_date: string;
   special_notes: string;
 };
 
@@ -31,3 +31,5 @@ export type CreateReservationPayload = {
   reserve_date: Date;
   special_notes: string;
 };
+
+export type ReservationStatus = "pending" | "confirmed" | "cancelled" | "completed";

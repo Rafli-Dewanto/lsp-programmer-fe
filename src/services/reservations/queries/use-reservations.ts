@@ -9,9 +9,10 @@ export function useReservations(forAdmin: boolean) {
   });
 }
 
-export function useReservation(id: number) {
+export function useReservation(id: string) {
   return useQuery({
     queryFn: () => getReservation(id),
     queryKey: [QK_RESERVATIONS, id],
+    enabled: !!id,
   });
 }

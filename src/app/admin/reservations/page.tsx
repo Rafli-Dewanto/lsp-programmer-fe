@@ -1,6 +1,10 @@
+import ManageReservations from "@/components/reservations/manage-reservations"
+
 const ReservationManagementPage = () => {
   return (
-    <main>AdminReservationPage</main>
+    <main>
+      <ManageReservations />
+    </main>
   )
 }
 

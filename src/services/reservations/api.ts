@@ -11,7 +11,7 @@ export function getReservations(forAdmin: boolean) {
   return apiResolver<Response<Reservation[]>>(() => axios.get(url));
 }
 
-export function getReservation(id: number) {
+export function getReservation(id: string) {
   return apiResolver<Response<Reservation>>(() =>
     axios.get(`/reservations/${id}`)
   );

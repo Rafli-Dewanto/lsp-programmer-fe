@@ -8,6 +8,7 @@ import { Employee } from "@/services/employees/types"
 import { Briefcase, Loader2, Mail, MapPin, User } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 const UpdateEmployeePage = () => {
   const router = useRouter()
@@ -43,7 +44,7 @@ const UpdateEmployeePage = () => {
       })
       router.push("/admin/employees")
     } catch (error) {
-      console.error("Failed to update employee:", error)
+      toast.error("Failed to update employee: " + error)
     }
   }
 
