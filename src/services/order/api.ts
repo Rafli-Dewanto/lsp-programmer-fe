@@ -1,6 +1,6 @@
 import { apiResolver, MetaData, Response } from "@/utils/api";
 import axios from "../axios";
-import { GetOrderResponse, OrderPayload, OrderResponse } from "./types";
+import { FoodStatus, GetOrderResponse, OrderPayload, OrderResponse } from "./types";
 
 export function PlaceOrderCake(payload: OrderPayload) {
   return apiResolver<Response<OrderResponse>>(() =>
@@ -21,6 +21,14 @@ export function GetOrderById(page?: number) {
         page: page || 1,
         limit: 10,
       },
+    })
+  );
+}
+
+export function UpdateFoodStatus(orderId: number, status: FoodStatus) {
+  return apiResolver<Response>(() =>
+    axios.patch(`/orders/${orderId}/food-status`, {
+      food_status: status,
     })
   );
 }

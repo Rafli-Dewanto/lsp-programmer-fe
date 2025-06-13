@@ -19,6 +19,7 @@ export type GetOrderResponse = {
   customer: Customer;
   status: string;
   total_price: number;
+  food_status: string;
   delivery_address: string;
   items: Items[];
   created_at: Date;
@@ -48,3 +49,5 @@ export type Cake = {
   rating: number;
   image_url: string;
 }
+
+export type FoodStatus = "pending" | "delivered" | "cancelled" | "ready" | "cooking";

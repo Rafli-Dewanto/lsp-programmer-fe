@@ -17,12 +17,19 @@ import Show from "../shared/show";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import InvoicePrint from "./invoice-print";
+import { useUpdateOrderStatus } from "@/services/order/mutations/use-update-order-status";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { FoodStatus } from "@/services/order/types";
+import { cn } from "@/lib/utils";
+
+const foodStatus = ["pending", "delivered", "cancelled", "ready", "cooking"];
 
 const CustomersOrders = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const { data, isLoading, error } = useCustomersOrders({ page: Number(searchParams.get("page") || "1") });
+  const updateOrderStatusMutation = useUpdateOrderStatus();
 
   const orders = data?.data || [];
   const meta = data?.meta;
@@ -75,20 +82,46 @@ const CustomersOrders = () => {
                       {order.delivery_address}
                     </p>
                   </div>
-                  <div className="text-right space-y-2">
+                  <div className="text-right space-y-6">
                     <p className="text-pink-600 font-bold">
                       {formatCurrency(order.total_price, "id-ID")}
                     </p>
-                    <span
-                      className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : order.status === "delivered"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-200 text-gray-700"
-                        }`}
-                    >
-                      {order.status}
-                    </span>
+                    <section className="flex justify-start items-center space-x-2">
+                      {/* change into select and update the status */}
+                      <Select
+                        onValueChange={(status) => updateOrderStatusMutation.mutate({ orderId: order.id, status: status as FoodStatus })}
+                        value={
+                          order.food_status
+                        }
+                      >
+                        <SelectTrigger className={cn(``, {
+                          "bg-green-100 text-green-800": order.food_status === "delivered",
+                          "bg-yellow-100 text-yellow-800": order.food_status === "pending",
+                          "bg-gray-200 text-gray-700": order.food_status === "cancelled",
+                          "bg-cyan-200 text-cyan-800": order.food_status === "ready",
+                          "bg-pink-100 text-pink-600": order.food_status === "cooking",
+                        })}>
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {foodStatus.map((foodOrderStatus) => (
+                            <SelectItem key={foodOrderStatus} value={foodOrderStatus} className={`my-2`}>
+                              {foodOrderStatus}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded-full ${order.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : order.status === "delivered"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-200 text-gray-700"
+                          }`}
+                      >
+                        {order.status}
+                      </span>
+                    </section>
                     <div className="flex items-center gap-3 my-2">
                       <InvoicePrint order={order} />
                     </div>
@@ -96,7 +129,7 @@ const CustomersOrders = () => {
                 </div>
                 {/* cake items */}
                 <Show when={order.items.length > 0}>
-                  <Separator className="mt-4" />
+                  <Separator className="my-3" />
                   <ScrollArea className="max-h-[200px] pr-2">
                     <div className="space-y-2">
                       {order.items.map((item) => (

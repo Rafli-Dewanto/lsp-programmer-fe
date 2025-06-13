@@ -62,16 +62,28 @@ const OrderHistory = () => {
                 <p className="text-sm text-gray-500">{new Date(order.created_at).toLocaleString()}</p>
               </div>
               <div className='flex flex-col items-center justify-center space-y-3.5'>
-                <span
-                  className={`text-sm font-medium px-3 py-1 rounded-full ${order.status === "completed"
-                    ? "bg-green-100 text-green-700"
-                    : order.status === "pending"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-gray-100 text-gray-600"
-                    }`}
-                >
-                  {order.status}
-                </span>
+                <section className="flex justify-start items-center space-x-2">
+                  <span
+                    className={`text-sm font-medium px-3 py-1 rounded-full ${order.status === "completed"
+                      ? "bg-green-100 text-green-700"
+                      : order.status === "pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-gray-100 text-gray-600"
+                      }`}
+                  >
+                    {order.status}
+                  </span>
+                  <span
+                    className={`text-sm font-medium px-3 py-1 rounded-full ${order.food_status === "delivered"
+                      ? "bg-green-100 text-green-700"
+                      : order.food_status === "pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-gray-100 text-gray-600"
+                      }`}
+                  >
+                    {order.food_status}
+                  </span>
+                </section>
                 <Show when={order.status === "pending"}>
                   <Button onClick={() => handlePayment(order.id.toString())}
                     variant="outline"
