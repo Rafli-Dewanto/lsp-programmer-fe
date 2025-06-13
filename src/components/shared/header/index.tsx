@@ -50,6 +50,7 @@ const Header = () => {
             <Link href={ROUTES.SHOP} className={linkClasses('/shop')}>Shop</Link>
             <Link href={ROUTES.ABOUT} className={linkClasses('/about')}>About</Link>
             <Link href={ROUTES.ORDER} className={linkClasses('/orders')}>Orders</Link>
+            <Link href={ROUTES.RESERVATION} className={linkClasses('/reservations')}>Reservations</Link>
             <Link href={ROUTES.CART} className="hidden sm:flex items-center">
               <Button variant="outline" size="sm" className="border-pink-200 hover:bg-pink-50 hover:text-pink-800">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -74,7 +75,7 @@ const Header = () => {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="border-l border-pink-100 bg-white" title='Menu' side="right">
+            <SheetContent className="border-l border-pink-100 bg-white overflow-y-scroll" title='Menu' side="right">
               <SheetTitle>
                 <div className="flex items-center gap-y-4 gap-x-2 px-2 py-4 border-b border-pink-100">
                   <Image
@@ -93,6 +94,7 @@ const Header = () => {
                 <Link href={ROUTES.SHOP} className={`py-2 px-3 rounded-lg ${pathname === '/shop' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Shop</Link>
                 <Link href={ROUTES.ABOUT} className={`py-2 px-3 rounded-lg ${pathname === '/about' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>About</Link>
                 <Link href={ROUTES.ORDER} className={`py-2 px-3 rounded-lg ${pathname === '/orders' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Orders</Link>
+                <Link href={ROUTES.RESERVATION} className={`py-2 px-3 rounded-lg ${pathname === '/reservations' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Reservations</Link>
 
                 <div className="my-2 border-t border-pink-100"></div>
 
@@ -124,13 +126,12 @@ const Header = () => {
 
                 <Show when={role === "admin"}>
                   <div className="mt-2 p-3 rounded-lg bg-pink-100 space-y-4">
-                    <h3 className="text-sm font-medium text-pink-600 mb-2">Admin Panel</h3>
                     <AdminNavigation />
                   </div>
                 </Show>
 
                 <Show when={!!email}>
-                  <Button onClick={logout} size="sm" className="mt-4 w-full bg-pink-900 hover:bg-pink-700 text-white cursor-pointer">
+                  <Button onClick={logout} size="sm" className="mt-4 w-full bg-pink-900 hover:bg-pink-700 text-white cursor-pointer mb-7">
                     Log out
                   </Button>
                 </Show>

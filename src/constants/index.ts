@@ -19,6 +19,8 @@ export const ROUTES = {
   SHOP: "/shop",
   CART: "/shop/cart",
   ORDER: "/orders",
+  RESERVATION: "/reservations",
+  PROFILE: "/profile",
 };
 // ====================================================================================================================
 // tanstack query keys
