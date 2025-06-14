@@ -1,11 +1,11 @@
 import CakeCard from '@/components/shared/cake-card'
 import Show from '@/components/shared/show'
 import { Button } from '@/components/ui/button'
-import { useCakes } from '@/services/cakes/queries/use-cakes'
+import { useMenus } from '@/services/menus/queries/use-menus'
 import { ChevronRight } from 'lucide-react'
 
 const Featured = () => {
-  const { data, isLoading, isError } = useCakes({
+  const { data, isLoading, isError } = useMenus({
     limit: 4
   });
 

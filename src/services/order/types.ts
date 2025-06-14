@@ -3,7 +3,7 @@ export interface OrderPayload {
 }
 
 export interface Item {
-  cake_id: number;
+  menu_id: number;
   quantity: number;
   title?: string;
   price: number;
@@ -24,23 +24,23 @@ export type GetOrderResponse = {
   items: Items[];
   created_at: Date;
   updated_at: Date;
-}
+};
 
 export type Customer = {
   id: number;
   name: string;
   email: string;
   address: string;
-}
+};
 
 export type Items = {
   id: number;
-  cake: Cake;
+  menu: Menu;
   quantity: number;
   price: number;
-}
+};
 
-export type Cake = {
+export type Menu = {
   id: number;
   title: string;
   description: string;
@@ -48,6 +48,11 @@ export type Cake = {
   category: string;
   rating: number;
   image_url: string;
-}
+};
 
-export type FoodStatus = "pending" | "delivered" | "cancelled" | "ready" | "cooking";
+export type FoodStatus =
+  | "pending"
+  | "delivered"
+  | "cancelled"
+  | "ready"
+  | "cooking";

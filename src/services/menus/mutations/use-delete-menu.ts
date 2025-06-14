@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCake } from "../api";
-import { QK_CAKES } from "@/constants";
+import { deleteMenu } from "../api";
+import { QK_MENUS } from "@/constants";
 
-export function useDeleteCake() {
+export function useDeleteMenu() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteCake,
+    mutationFn: deleteMenu,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QK_CAKES],
+        queryKey: [QK_MENUS],
       });
     },
   });

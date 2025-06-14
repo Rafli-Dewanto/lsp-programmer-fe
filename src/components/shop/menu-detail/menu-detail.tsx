@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
-import { useCake } from "@/services/cakes/queries/use-cakes";
+import { useMenu } from "@/services/menus/queries/use-menus";
 import { useAddCart } from "@/services/cart/mutations/use-add-cart";
 import { formatCurrency } from "@/utils/string";
 import { Heart, Minus, Plus, Star } from "lucide-react";
@@ -17,11 +17,11 @@ import { useWishlist } from "@/services/wishlist/queries/use-wishlist";
 import { useAddWishlist } from "@/services/wishlist/mutations/use-add-wishlist";
 import { useRemoveWishlist } from "@/services/wishlist/mutations/use-remove-wislist";
 
-type CakeDetailProps = {
+type MenuDetailProps = {
   id: string;
 }
 
-export default function CakeDetail(props: CakeDetailProps) {
+export default function MenuDetail(props: MenuDetailProps) {
   const { id } = props;
   const router = useRouter();
   const { email } = useAuth();
@@ -31,7 +31,7 @@ export default function CakeDetail(props: CakeDetailProps) {
   const addToWishlist = useAddWishlist();
   const removeFromWishlist = useRemoveWishlist();
 
-  const { data: cake, isLoading, error } = useCake(Number(id));
+  const { data: cake, isLoading, error } = useMenu(Number(id));
   const isInWishlist = wishlist?.data?.some((item) => item.id === cake?.data?.id);
 
   const handleWishlistClick = () => {
@@ -59,7 +59,7 @@ export default function CakeDetail(props: CakeDetailProps) {
     }
     if (cake?.data) {
       addToCartMutation.mutate({
-        cake_id: cake.data.id,
+        menu_id: cake.data.id,
         quantity: quantity,
       });
     }

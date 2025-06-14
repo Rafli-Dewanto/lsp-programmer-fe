@@ -113,7 +113,7 @@ const OrderHistory = () => {
                 {order.items.map((item) => (
                   <div key={item.id} className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{item.cake.title}</p>
+                      <p className="text-sm font-medium text-gray-800">{item.menu.title}</p>
                       <p className="text-xs text-gray-500">
                         {item.quantity} × {formatCurrency(item.price, 'id-ID')}
                       </p>

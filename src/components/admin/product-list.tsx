@@ -26,9 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useDisclosure from "@/hooks/use-disclosure";
-import { useDeleteCake } from "@/services/cakes/mutations/use-delete-cake";
-import { useCakes } from "@/services/cakes/queries/use-cakes";
-import { cakeCategory } from "@/services/cakes/types";
+import { useDeleteMenu } from "@/services/menus/mutations/use-delete-menu";
+import { useMenus } from "@/services/menus/queries/use-menus";
+import { menuCategory } from "@/services/menus/types";
 import { getErrorMessage } from "@/utils/error";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -42,16 +42,16 @@ const ProductList = () => {
   const searchParams = useSearchParams();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { close, isOpen, open } = useDisclosure();
-  const deleteCakeMutation = useDeleteCake();
+  const deleteCakeMutation = useDeleteMenu();
 
   const page = Number(searchParams.get("page") || "1");
   const title = searchParams.get("title") || "";
-  const category = searchParams.get("category") as cakeCategory;
+  const category = searchParams.get("category") as menuCategory;
 
   const [searchTitle, setSearchTitle] = useState(title);
   const [searchCategory, setSearchCategory] = useState(category ?? "all");
 
-  const { data, isLoading, error } = useCakes({
+  const { data, isLoading, error } = useMenus({
     page,
     title,
     category: category === "all" ? "" : category,
@@ -97,7 +97,7 @@ const ProductList = () => {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/cakes/${id}`);
+    router.push(`/admin/menus/${id}`);
   };
 
   const handleAddNew = () => {
@@ -108,7 +108,7 @@ const ProductList = () => {
     <div className="container py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-semibold">Product Management</h1>
-        <Link href="/admin/cakes/create">
+        <Link href="/admin/menus/create">
           <Button className="bg-pink-600 hover:bg-pink-700 active:bg-pink-800" onClick={handleAddNew}>
             Add New Cake
           </Button>
@@ -125,7 +125,7 @@ const ProductList = () => {
 
         <Select
           value={searchCategory}
-          onValueChange={(value) => setSearchCategory(value as cakeCategory || "other")}
+          onValueChange={(value) => setSearchCategory(value as menuCategory || "other")}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select category" />

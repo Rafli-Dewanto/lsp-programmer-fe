@@ -1,12 +1,12 @@
-import CakeDetail from '@/components/shop/cake-detail/cake-detail'
+import MenuDetail from '@/components/shop/menu-detail/menu-detail'
 
-const CakeDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const MenuDetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   return (
     <main>
-      <CakeDetail id={id} />
+      <MenuDetail id={id} />
     </main>
   )
 }
 
-export default CakeDetailPage
+export default MenuDetailPage

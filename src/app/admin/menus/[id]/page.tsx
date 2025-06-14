@@ -1,21 +1,21 @@
 "use client";
 
-import CakeForm from "@/components/admin/cake-form";
-import { useCake } from "@/services/cakes/queries/use-cakes";
-import { useUpdateCake } from "@/services/cakes/mutations/use-update-cake";
+import MenuForm from "@/components/admin/menu-form";
+import { useMenu } from "@/services/menus/queries/use-menus";
+import { useUpdateMenu } from "@/services/menus/mutations/use-update-menu";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { Cake } from "@/services/cakes/types";
+import { Menu } from "@/services/menus/types";
 
 export default function EditCakePage() {
   const router = useRouter();
   const params = useParams();
   const id = Number(params.id);
 
-  const { data: cakeData } = useCake(id);
-  const { mutate: updateCake, isPending } = useUpdateCake();
+  const { data: cakeData } = useMenu(id);
+  const { mutate: updateCake, isPending } = useUpdateMenu();
 
-  const handleSubmit = (data: Cake) => {
+  const handleSubmit = (data: Menu) => {
     updateCake({ ...data, id }, {
       onSuccess: () => {
         router.push("/admin");
@@ -26,7 +26,7 @@ export default function EditCakePage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6 text-pink-800">Edit Cake</h1>
-      <CakeForm
+      <MenuForm
         initialData={cakeData?.data}
         onSubmit={handleSubmit}
         isLoading={isPending}

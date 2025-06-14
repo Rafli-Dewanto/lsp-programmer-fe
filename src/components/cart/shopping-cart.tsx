@@ -84,7 +84,7 @@ const ShoppingCart = () => {
 
     orderMutation.mutate({
       items: selectedItemsList.map((item) => ({
-        cake_id: item.cake_id,
+        menu_id: item.menu_id,
         title: item.name,
         quantity: item.quantity,
         price: item.price,
@@ -157,7 +157,7 @@ const ShoppingCart = () => {
           <Button
             variant="outline"
             className="mt-4 border-pink-200 text-pink-700 hover:bg-pink-50"
-            onClick={() => window.location.href = '/cakes'}
+            onClick={() => window.location.href = '/menus'}
           >
             Browse Cakes
           </Button>
@@ -225,7 +225,7 @@ const ShoppingCart = () => {
                             size="sm"
                             onClick={() => {
                               addCartMutation.mutate({
-                                cake_id: item.id,
+                                menu_id: item.menu_id,
                                 quantity: item.quantity + 1,
                               });
                             }}

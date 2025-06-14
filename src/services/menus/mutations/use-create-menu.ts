@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCake } from "../api";
-import { QK_CAKES } from "@/constants";
+import { createMenu } from "../api";
+import { QK_MENUS } from "@/constants";
 
-export function useUpdateCake() {
+export function useCreateMenu() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateCake,
+    mutationFn: createMenu,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QK_CAKES],
+        queryKey: [QK_MENUS],
       });
     },
   });

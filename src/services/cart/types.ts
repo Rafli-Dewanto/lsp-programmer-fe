@@ -1,5 +1,5 @@
 export type AddToCartPayload = {
-  cake_id: number;
+  menu_id: number;
   quantity: number;
 };
 
@@ -8,7 +8,7 @@ export type CartResponse = {
   customer_id: number;
   name: string;
   image: string;
-  cake_id: number;
+  menu_id: number;
   quantity: number;
   price: number;
   subtotal: number;

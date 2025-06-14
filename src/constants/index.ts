@@ -25,7 +25,7 @@ export const ROUTES = {
 // ====================================================================================================================
 // tanstack query keys
 export const QK_CUSTOMER = "customers";
-export const QK_CAKES = "cakes";
+export const QK_MENUS = "menus";
 export const QK_CARTS = "carts";
 export const QK_ORDERS = "orders";
 export const QK_WISHLIST = "wishlist";
@@ -35,11 +35,15 @@ export const QK_TABLES = "tables";
 export const QK_PAYMENTS = "payments";
 // ====================================================================================================================
 // others
-export type EMPLOYEE_ROLES = "admin" | "kitchen_staff" | "waitress" | "cashier"
+export type EMPLOYEE_ROLES = "admin" | "kitchen_staff" | "waitress" | "cashier";
 export const roles = [
   { value: "admin", label: "Admin", color: "bg-pink-100 text-pink-800" },
-  { value: "kitchen_staff", label: "Kitchen Staff", color: "bg-orange-100 text-orange-800" },
+  {
+    value: "kitchen_staff",
+    label: "Kitchen Staff",
+    color: "bg-orange-100 text-orange-800",
+  },
   { value: "waitress", label: "Waitress", color: "bg-blue-100 text-blue-800" },
   { value: "cashier", label: "Cashier", color: "bg-green-100 text-green-800" },
-]
+];
 // ====================================================================================================================

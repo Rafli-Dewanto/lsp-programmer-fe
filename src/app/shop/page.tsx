@@ -1,4 +1,4 @@
-import ShopPage from '@/components/shop/cakes'
+import ShopPage from '@/components/shop/menus'
 import { Metadata } from 'next'
 import React from 'react'
 

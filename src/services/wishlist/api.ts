@@ -1,6 +1,6 @@
 import { apiResolver, Response } from "@/utils/api";
 import axios from "../axios";
-import { Cake } from "../cakes/types";
+import { Menu } from "../menus/types";
 
 export type Wishlist = {
   id: number;
@@ -10,15 +10,15 @@ export type Wishlist = {
 };
 
 export function getWishlists() {
-  return apiResolver<Response<Cake[]>>(() => axios.get("/wishlists"));
+  return apiResolver<Response<Menu[]>>(() => axios.get("/wishlists"));
 }
 
-export function addToWishlist(cakeId: number) {
-  return apiResolver<Response<void>>(() => axios.post(`/wishlists/${cakeId}`));
+export function addToWishlist(menuID: number) {
+  return apiResolver<Response<void>>(() => axios.post(`/wishlists/${menuID}`));
 }
 
-export function removeFromWishlist(cakeId: number) {
+export function removeFromWishlist(menuID: number) {
   return apiResolver<Response<void>>(() =>
-    axios.delete(`/wishlists/${cakeId}`)
+    axios.delete(`/wishlists/${menuID}`)
   );
 }
