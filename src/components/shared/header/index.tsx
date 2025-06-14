@@ -1,17 +1,15 @@
 "use client"
 
-import AdminNavigation from '@/components/admin/admin-navigation'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { ROUTES } from '@/constants'
 import { useAuth } from '@/contexts/auth-context'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { useCarts } from '@/services/cart/queries/use-carts'
-import { Menu, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Show from '../show'
+import MobileNavigation from './mobile-nav'
 import RightHeader from './right-header'
 
 const Header = () => {
@@ -69,75 +67,13 @@ const Header = () => {
           <RightHeader />
         </Show>
         <Show when={mobile}>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="hover:bg-pink-50 text-pink-600">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent className="border-l border-pink-100 bg-white overflow-y-scroll" title='Menu' side="right">
-              <SheetTitle>
-                <div className="flex items-center gap-y-4 gap-x-2 px-2 py-4 border-b border-pink-100">
-                  <Image
-                    src={'/assets/strawberry-cake.svg'}
-                    width={20}
-                    height={20}
-                    alt="CakeVille"
-                    priority
-                    quality={100}
-                  />
-                  <p className="font-bold text-2xl bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">CakeVille</p>
-                </div>
-              </SheetTitle>
-              <nav className="flex flex-col gap-4 mt-6 container px-2">
-                <Link href={ROUTES.HOME} className={`py-2 px-3 rounded-lg ${pathname === '/' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Home</Link>
-                <Link href={ROUTES.SHOP} className={`py-2 px-3 rounded-lg ${pathname === '/shop' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Shop</Link>
-                <Link href={ROUTES.ABOUT} className={`py-2 px-3 rounded-lg ${pathname === '/about' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>About</Link>
-                <Link href={ROUTES.ORDER} className={`py-2 px-3 rounded-lg ${pathname === '/orders' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Orders</Link>
-                <Link href={ROUTES.RESERVATION} className={`py-2 px-3 rounded-lg ${pathname === '/reservations' ? 'bg-pink-50 text-pink-600 font-medium' : 'hover:bg-pink-50 hover:text-pink-600'}`}>Reservations</Link>
-
-                <div className="my-2 border-t border-pink-100"></div>
-
-                <Link href={ROUTES.CART} className="py-2">
-                  <Button variant={'outline'} className='w-full flex items-center justify-center gap-2 border-pink-200 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300'>
-                    <ShoppingBag className="h-4 w-4" />
-                    <p>Cart</p>
-                    <Show when={(totalItems ?? 0) > 0}>
-                      <span className="ml-1 bg-pink-600 text-white rounded-full px-2 py-0.5 text-xs">
-                        {totalItems}
-                      </span>
-                    </Show>
-                  </Button>
-                </Link>
-
-                <div className="mt-4">
-                  <Link href="/auth/login">
-                    <Show when={!!email} fallback={(
-                      <Button variant="outline" size="sm" className="w-full border-pink-200 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300">
-                        Sign in
-                      </Button>
-                    )}>
-                      <div className="flex items-center px-3 py-2 rounded-lg bg-pink-50 text-pink-600">
-                        <span className="font-medium">{email}</span>
-                      </div>
-                    </Show>
-                  </Link>
-                </div>
-
-                <Show when={role === "admin"}>
-                  <div className="mt-2 p-3 rounded-lg bg-pink-100 space-y-4">
-                    <AdminNavigation />
-                  </div>
-                </Show>
-
-                <Show when={!!email}>
-                  <Button onClick={logout} size="sm" className="mt-4 w-full bg-pink-900 hover:bg-pink-700 text-white cursor-pointer mb-7">
-                    Log out
-                  </Button>
-                </Show>
-              </nav>
-            </SheetContent>
-          </Sheet>
+          <MobileNavigation
+            totalItems={totalItems}
+            email={email ?? ''}
+            role={role ?? ''}
+            pathname={pathname}
+            logout={logout}
+          />
         </Show>
       </div>
     </header>
