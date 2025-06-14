@@ -19,6 +19,7 @@ import { useRemoveWishlist } from "@/services/wishlist/mutations/use-remove-wisl
 
 type MenuDetailProps = {
   id: string;
+  withControl?: boolean;
 }
 
 export default function MenuDetail(props: MenuDetailProps) {
@@ -124,30 +125,32 @@ export default function MenuDetail(props: MenuDetailProps) {
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleQuantityChange(quantity - 1)}
-                    disabled={quantity <= 1}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => handleQuantityChange(Number(e.target.value))}
-                    className="w-20 text-center"
-                    min={1}
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleQuantityChange(quantity + 1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Show when={props.withControl ?? true}>
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <Input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => handleQuantityChange(Number(e.target.value))}
+                      className="w-20 text-center"
+                      min={1}
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </Show>
 
                 <Button
                   className="w-full bg-pink-600 hover:bg-pink-700 text-lg py-6"
