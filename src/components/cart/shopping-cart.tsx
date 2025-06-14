@@ -13,9 +13,14 @@ import { formatCurrency } from '@/utils/string';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowRight, ShoppingCart as CartIcon, Package, Check } from 'lucide-react';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import Show from '../shared/show';
+import { LS_TOKEN } from '@/constants';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/auth-context';
+import { useAuthorize } from '@/services/auth/mutations/use-auth';
+import { logger } from '@/utils/logger';
 
 const ShoppingCart = () => {
   const { data: cart, isLoading } = useCarts();
@@ -26,6 +31,33 @@ const ShoppingCart = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
   const [selectAll, setSelectAll] = useState(false);
+
+  // Check if user is authorized
+  const authorizeMutation = useAuthorize();
+  const { logout, token } = useAuth();
+  const router = useRouter();
+  const isFetched = useRef(false);
+
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (isFetched.current) return;
+      isFetched.current = true;
+      if (!token) return;
+
+      try {
+        await authorizeMutation.mutateAsync(undefined);
+      } catch (error) {
+        logger.debug('Error on fetching token', error);
+        toast.error('Your session has expired. Please login again.');
+        logout()
+        localStorage.removeItem(LS_TOKEN);
+        router.push('/auth/login');
+      }
+    };
+
+    checkAuth();
+  });
 
   // Initialize selected items when cart data loads
   useEffect(() => {

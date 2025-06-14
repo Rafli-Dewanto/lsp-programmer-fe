@@ -36,7 +36,6 @@ const AdminNavigation = () => {
 
   return (
     <div className="w-full max-w-[250px] p-2.5 space-y-2 overflow-y-scroll">
-      <div className="text-sm font-medium text-gray-500 px-2 mb-1">Admin Controls</div>
       {route.map((item) => (
         <React.Fragment key={item.name}>
           <Show when={item.role.includes(role as string)}>

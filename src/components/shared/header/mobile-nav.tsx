@@ -162,8 +162,8 @@ const MobileNavigation = (props: MobileNavigationProps) => {
           {/* Admin Section */}
           <Show when={["admin", "kitchen_staff", "waitress", "cashier"].includes(role as string)}>
             <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100">
-              <h3 className="text-sm font-semibold text-purple-700 mb-3 flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <h3 className="text-sm font-semibold text-pink-700 mb-3 flex items-center gap-2">
+                <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
                 Admin Panel
               </h3>
               <AdminNavigation />

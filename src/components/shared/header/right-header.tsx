@@ -60,7 +60,11 @@ export default function ProfileDropdown() {
 
         <Show when={["admin", "kitchen_staff", "waitress", "cashier"].includes(role as string)}>
           <DropdownMenuSeparator />
-          <div className="space-y-3">
+          <div className="py-4">
+            <h3 className="text-sm font-semibold text-pink-700 flex items-center gap-2 px-2">
+              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+              Admin Panel
+            </h3>
             <AdminNavigation />
           </div>
         </Show>
