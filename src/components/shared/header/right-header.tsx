@@ -58,7 +58,7 @@ export default function ProfileDropdown() {
           </Link>
         </DropdownMenuGroup>
 
-        <Show when={role === "admin"}>
+        <Show when={["admin", "kitchen_staff", "waitress", "cashier"].includes(role as string)}>
           <DropdownMenuSeparator />
           <div className="space-y-3">
             <AdminNavigation />
