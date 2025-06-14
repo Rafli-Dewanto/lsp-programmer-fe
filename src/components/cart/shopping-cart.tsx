@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAddCart } from '@/services/cart/mutations/use-add-cart';
-import { useRemoveCart } from '@/services/cart/mutations/use-remove-cart';
+import { useBulkRemoveCart, useRemoveCart } from '@/services/cart/mutations/use-remove-cart';
 import { useCarts } from '@/services/cart/queries/use-carts';
 import { usePlaceOrder } from '@/services/order/mutations/use-place-order';
 import { formatCurrency } from '@/utils/string';
@@ -21,6 +21,7 @@ const ShoppingCart = () => {
   const { data: cart, isLoading } = useCarts();
   const addCartMutation = useAddCart();
   const removeCartMutation = useRemoveCart();
+  const bulkRemoveCartMutation = useBulkRemoveCart();
   const orderMutation = usePlaceOrder();
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
@@ -91,19 +92,18 @@ const ShoppingCart = () => {
       })),
     }, {
       onSuccess: (data) => {
-        if (data.data?.redirect_url) {
-          // remove only the selected cart items
-          selectedItemsList.forEach((item) => removeCartMutation.mutate(item.id));
-          window.location.href = data.data.redirect_url;
-        } else {
-          toast.success(`Order Placed Successfully`);
-          // remove only the selected cart items
-          selectedItemsList.forEach((item) => removeCartMutation.mutate(item.id));
+        if (data?.data?.redirect_url) {
+          bulkRemoveCartMutation.mutate({ carts_ids: selectedItemsList.map((item) => item.id) });
+          window.location.href = data?.data?.redirect_url as string;
+          return;
         }
-        setIsProcessing(false);
+        toast.error(`Oops! Something went wrong. Please try again later.`);
+        return;
       },
       onError: (error) => {
         toast.error(`Error Processing Order: ${error.message}`);
+      },
+      onSettled: () => {
         setIsProcessing(false);
       },
     });

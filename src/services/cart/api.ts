@@ -18,3 +18,9 @@ export function RemoveCartItem(id: number) {
     axios.delete(`/carts/${id}`)
   );
 }
+
+export function BulkRemoveCartItem(payload: { carts_ids: number[] }) {
+  return apiResolver<Response<CartResponse[], MetaData>>(() =>
+    axios.post(`/carts/bulk`, { cart_ids: payload.carts_ids })
+  );
+}
