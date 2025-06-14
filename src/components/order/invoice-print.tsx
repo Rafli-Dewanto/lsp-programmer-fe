@@ -107,7 +107,7 @@ const InvoicePrint = ({ order }: InvoicePrintProps) => {
             <tbody>
               ${order.items.map(item => `
                 <tr>
-                  <td>${item.cake.title}</td>
+                  <td>${item.menu.title}</td>
                   <td>${item.quantity}</td>
                   <td>${formatCurrency(item.price, 'id-ID')}</td>
                   <td>${formatCurrency(item.price * item.quantity, 'id-ID')}</td>

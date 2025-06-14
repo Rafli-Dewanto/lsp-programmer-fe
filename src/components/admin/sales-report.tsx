@@ -36,8 +36,8 @@ const SalesReport = () => {
     const itemMap = new Map<string, { quantity: number; revenue: number }>();
     filteredOrders.forEach((order) => {
       order.items.forEach((item) => {
-        const existing = itemMap.get(item.cake.title) || { quantity: 0, revenue: 0 };
-        itemMap.set(item.cake.title, {
+        const existing = itemMap.get(item.menu.title) || { quantity: 0, revenue: 0 };
+        itemMap.set(item.menu.title, {
           quantity: existing.quantity + item.quantity,
           revenue: existing.revenue + item.price * item.quantity,
         });
@@ -53,7 +53,7 @@ const SalesReport = () => {
     const headers = ['Order ID,Date,Customer,Total Price,Items'];
     const rows = filteredOrders.map((order) => {
       const items = order.items
-        .map((item) => `${item.quantity}x ${item.cake.title}`)
+        .map((item) => `${item.quantity}x ${item.menu.title}`)
         .join('; ');
       return [
         order.id,

@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/auth-context';
-import { Cake } from '@/services/cakes/types';
+import { Menu } from '@/services/menus/types';
 import { useAddCart } from '@/services/cart/mutations/use-add-cart';
 import { useAddWishlist } from '@/services/wishlist/mutations/use-add-wishlist';
 import { useRemoveWishlist } from '@/services/wishlist/mutations/use-remove-wislist';
@@ -17,7 +17,7 @@ import React from 'react';
 import Show from '../show';
 
 interface CakeCardProps extends React.ComponentPropsWithoutRef<'div'> {
-  cake: Partial<Cake>
+  cake: Partial<Menu>
 }
 
 const CakeCard = (props: CakeCardProps) => {
@@ -50,7 +50,7 @@ const CakeCard = (props: CakeCardProps) => {
       return
     }
     addToCartMutation.mutate({
-      cake_id: cakeId,
+      menu_id: cakeId,
       quantity: 1,
     });
   }

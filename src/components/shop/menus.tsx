@@ -23,8 +23,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { useCakes } from "@/services/cakes/queries/use-cakes"
-import { cakeCategory } from "@/services/cakes/types"
+import { useMenus } from "@/services/menus/queries/use-menus"
+import { menuCategory } from "@/services/menus/types"
 import { Filter, Search, X } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
@@ -40,7 +40,7 @@ export default function ShopPage() {
   const page = Number(searchParams.get("page") || "1")
   const title = searchParams.get("title") || ""
   // const price = Number(searchParams.get("price") || "100_000")
-  const category = (searchParams.get("category")) as cakeCategory | ""
+  const category = (searchParams.get("category")) as menuCategory | ""
 
   // Local state for form inputs
   const [searchTitle, setSearchTitle] = useState(title)
@@ -49,7 +49,7 @@ export default function ShopPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   // Fetch cakes with current params
-  const { data, isLoading, error } = useCakes({
+  const { data, isLoading, error } = useMenus({
     page,
     title,
     // price,
@@ -136,7 +136,7 @@ export default function ShopPage() {
                       <Label htmlFor="desktop-category" className="text-base mb-2 block">
                         Category
                       </Label>
-                      <Select value={searchCategory} onValueChange={(value: cakeCategory | "") => setSearchCategory(value)}>
+                      <Select value={searchCategory} onValueChange={(value: menuCategory | "") => setSearchCategory(value)}>
                         <SelectTrigger id="desktop-category">
                           <SelectValue placeholder="All categories" />
                         </SelectTrigger>
@@ -195,7 +195,7 @@ export default function ShopPage() {
                           <Label htmlFor="mobile-category" className="text-base">
                             Category
                           </Label>
-                          <Select value={searchCategory} onValueChange={(value: cakeCategory | "") => setSearchCategory(value)}>
+                          <Select value={searchCategory} onValueChange={(value: menuCategory | "") => setSearchCategory(value)}>
                             <SelectTrigger id="mobile-category">
                               <SelectValue placeholder="All categories" />
                             </SelectTrigger>
