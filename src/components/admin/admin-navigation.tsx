@@ -20,8 +20,6 @@ const route = [
 const AdminNavigation = () => {
   const { role, isLoading } = useAuth()
   const router = useRouter()
-  console.log(role)
-
 
   useEffect(() => {
     if (isLoading) return

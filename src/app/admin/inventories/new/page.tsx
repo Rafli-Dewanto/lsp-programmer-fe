@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCreateInventory } from "@/services/inventories/mutations/use-create-inventory";
+import { getErrorMessage } from "@/utils/error";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const CreateInventoryPage = () => {
   const router = useRouter();
@@ -25,7 +27,7 @@ const CreateInventoryPage = () => {
       await createInventoryMutation.mutateAsync(formData);
       router.push("/admin/inventories");
     } catch (error) {
-      console.error("Failed to create inventory:", error);
+      toast.error(getErrorMessage(error));
     }
   };
 

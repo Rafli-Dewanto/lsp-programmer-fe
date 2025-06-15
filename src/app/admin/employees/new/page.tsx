@@ -2,9 +2,11 @@
 
 import { roles, type EMPLOYEE_ROLES } from "@/constants"
 import { useRegisterEmployee } from "@/services/employees/mutations/use-register-employee"
+import { getErrorMessage } from "@/utils/error"
 import { Briefcase, Loader2, Mail, MapPin, User, Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 
 const RegisterEmployeePage = () => {
   const router = useRouter()
@@ -24,7 +26,7 @@ const RegisterEmployeePage = () => {
       await registerEmployeeMutation.mutateAsync(formData)
       router.push("/admin/employees")
     } catch (error) {
-      console.error("Failed to register employee:", error)
+      toast.error(getErrorMessage(error))
     }
   }
 

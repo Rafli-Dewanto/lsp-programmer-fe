@@ -21,7 +21,6 @@ export function getMenu(id: number) {
 }
 
 export function createMenu(payload: Menu) {
-  console.log(payload);
   return apiResolver<Response<Menu>>(() =>
     axios.post("/menus", {
       title: payload.title,

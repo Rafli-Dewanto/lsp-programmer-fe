@@ -48,7 +48,7 @@ const ShoppingCart = () => {
       try {
         await authorizeMutation.mutateAsync(undefined);
       } catch (error) {
-        logger.debug('Error on fetching token', error);
+        logger.trace('Error on fetching token', error);
         toast.error('Your session has expired. Please login again.');
         logout()
         localStorage.removeItem(LS_TOKEN);

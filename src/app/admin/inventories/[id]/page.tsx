@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUpdateInventory } from "@/services/inventories/mutations/use-update-inventory";
 import { useInventory } from "@/services/inventories/queries/use-inventories";
+import { getErrorMessage } from "@/utils/error";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const UpdateInventoryPage = () => {
   const router = useRouter();
@@ -45,7 +47,7 @@ const UpdateInventoryPage = () => {
       });
       router.push("/admin/inventories");
     } catch (error) {
-      console.error("Failed to update inventory:", error);
+      toast.error(getErrorMessage(error));
     }
   };
 

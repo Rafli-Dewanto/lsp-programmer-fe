@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/utils/error";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -22,7 +23,7 @@ export default function RegisterPage() {
       { name, email, password, address },
       {
         onSuccess: () => {
-          alert("Registration successful! Please log in.");
+          toast.success("Registration successful");
           window.location.href = "/login";
         },
         onError: (error) => {

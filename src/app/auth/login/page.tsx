@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LS_TOKEN } from "@/constants";
+import { COOKIE_TOKEN } from "@/constants";
+import { useAuth } from "@/contexts/auth-context";
 import { useLogin } from "@/services/auth/mutations/use-auth";
 import { getErrorMessage } from "@/utils/error";
+import { setCookie } from "cookies-next/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -17,6 +19,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const loginMutation = useLogin();
   const searchParams = useSearchParams();
+  const { setToken } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +28,8 @@ export default function LoginPage() {
         if (data?.data == null) {
           alert(data?.data);
         }
-        localStorage.setItem(LS_TOKEN, data?.data as string);
+        setCookie(COOKIE_TOKEN, data?.data as string, { secure: false, sameSite: "lax", path: "/" });
+        setToken(data?.data as string);
         if (searchParams.get("callbackUrl")) {
           window.location.href = searchParams.get("callbackUrl") || "/";
         } else {

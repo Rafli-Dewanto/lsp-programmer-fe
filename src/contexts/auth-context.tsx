@@ -1,15 +1,17 @@
 "use client";
 
-import { LS_TOKEN } from '@/constants';
-import { useRouter } from 'next/navigation';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import { LS_TOKEN as COOKIE_TOKEN } from "@/constants"; // You can rename this to COOKIE_TOKEN for clarity
+import { useRouter } from "next/navigation";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { getCookie, setCookie, deleteCookie } from "cookies-next/client";
+import { logger } from "@/utils/logger";
 
 interface JwtPayload {
   email: string;
   name: string;
   role: string;
-  [key: string]: string; // In case there are additional fields
+  [key: string]: string;
 }
 
 interface AuthContextType {
@@ -41,41 +43,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setName(decoded.name || null);
         setRole(decoded.role || null);
       } catch (err) {
-        console.error("Invalid token:", err);
+        logger.error("Invalid token:", err);
         setEmail(null);
         setName(null);
+        setRole(null);
       }
     } else {
       setEmail(null);
       setName(null);
+      setRole(null);
     }
   };
 
-  // Load token from localStorage on mount
+  // Load token from cookies on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem(LS_TOKEN);
-    setToken(storedToken);
-    decodeToken(storedToken);
+    const storedToken = getCookie(COOKIE_TOKEN) as string | undefined;
+    logger.trace("Cookie value retrieved:", storedToken);
+    if (storedToken) {
+      setToken(storedToken);
+      decodeToken(storedToken);
+    }
     setLoading(false);
   }, []);
 
   // Redirect if not authenticated
-  useEffect(() => {
-    if (!loading && !token) {
-      const currentPath = window.location.pathname;
-      const publicPaths = ['/auth/login', '/auth/register', '/', "/shop", "/about"];
-      if (!publicPaths.includes(currentPath)) {
-        router.push('/auth/login');
-      }
-    }
-  }, [token, loading, router]);
+  // useEffect(() => {
+  //   if (!loading && !token) {
+  //     const currentPath = window.location.pathname;
+  //     const publicPaths = ["/auth/login", "/auth/register", "/", "/shop", "/about"];
+  //     if (!publicPaths.includes(currentPath)) {
+  //       router.push("/auth/login");
+  //     }
+  //   }
+  // }, [token, loading, router]);
 
   const handleSetToken = (newToken: string | null) => {
     setToken(newToken);
     if (newToken) {
-      localStorage.setItem(LS_TOKEN, newToken);
+      setCookie(COOKIE_TOKEN, newToken, { secure: false, sameSite: "lax", path: "/" });
     } else {
-      localStorage.removeItem(LS_TOKEN);
+      deleteCookie(COOKIE_TOKEN, { path: "/" });
     }
     decodeToken(newToken);
   };
@@ -86,13 +93,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setEmail(null);
     setName(null);
     setRole(null);
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
 
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ token, email, name, setToken: handleSetToken, logout: onLogout, role, isLoading: loading }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        email,
+        name,
+        role,
+        setToken: handleSetToken,
+        logout: onLogout,
+        isLoading: loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -101,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

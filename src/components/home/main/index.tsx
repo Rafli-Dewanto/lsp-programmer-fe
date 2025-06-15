@@ -8,6 +8,7 @@ import { useAuthorize } from '@/services/auth/mutations/use-auth';
 import { LS_TOKEN } from '@/constants';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context';
+import { logger } from '@/utils/logger';
 
 const MainPage = () => {
   const authorizeMutation = useAuthorize();
@@ -25,7 +26,7 @@ const MainPage = () => {
       try {
         await authorizeMutation.mutateAsync(undefined);
       } catch (error) {
-        console.error('Error on fetching token', error);
+        logger.error('Error on fetching token', error);
         logout()
         localStorage.removeItem(LS_TOKEN);
         router.push('/auth/login');

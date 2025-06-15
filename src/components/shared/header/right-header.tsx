@@ -62,7 +62,7 @@ export default function ProfileDropdown() {
           <DropdownMenuSeparator />
           <div className="py-4">
             <h3 className="text-sm font-semibold text-pink-700 flex items-center gap-2 px-2">
-              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
               Admin Panel
             </h3>
             <AdminNavigation />
